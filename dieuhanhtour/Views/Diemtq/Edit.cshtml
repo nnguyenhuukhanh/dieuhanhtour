@@ -1,0 +1,95 @@
+﻿@model Dmdiemtq
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<section class="content-header">
+    <h1>
+        Cập nhật điểm tham quan
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlDiemtq")">Danh sách điểm tham quan</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="Tilelai" type="hidden" />
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Tỉnh </label>
+                            <select asp-items="@ViewBag.tinh" asp-for="Tinhtp" class="form-control select2 ddlTinh" disabled></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Thành phố / Thị xã </label>
+                            <select asp-items="@ViewBag.thanhpho" asp-for="Thanhpho" class="form-control ddlThanhpho" style="background:inherit"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Code</label>
+                            <input asp-for="Code" class="form-control text-center" readonly />
+                            <span asp-validation-for="Diemtq" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Điểm tham quan</label>
+                            <input asp-for="Diemtq" class="form-control" />
+                            <span asp-validation-for="Diemtq" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Giá vé người lớn</label>
+                            <input asp-for="Giave" class="form-control numbers text-right" asp-format="{0:0,0}" />
+                            <span asp-validation-for="Giave" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Giá vé trẻ em</label>
+                            <input asp-for="Giatreem" class="form-control numbers text-right" asp-format="{0:0,0}" />
+                            <span asp-validation-for="Giatreem" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">VAT vào</label>
+                            <input asp-for="Vatvao" class="form-control text-right" />
+                            <span asp-validation-for="Vatvao" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">VAT ra</label>
+                            <input asp-for="Vatra" class="form-control text-right" />
+                            <span asp-validation-for="Vatra" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Công nợ</label>
+                            <select asp-for="Congno" asp-items="@ViewBag.supplier" class="form-control select2" style="width:100%"></select>
+                        </div>
+                        @*<div class="form-group col-md-2">
+                            <label class="control-label">Tỉ lệ lãi</label>
+                            <input asp-for="Tilelai" class="form-control numbers text-center" asp-format="{0:0,0}" />
+                            <span asp-validation-for="Tilelai" class="text-danger"></span>
+                        </div>*@
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                            <a href="@Context.Session.GetString("urlDiemtq")" class="btn btn-default">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>       
+        $(function () {
+           // $('.select2').select2();
+            $('.ddlnoborder').attr('disabled', true);
+        });
+    </script>
+}

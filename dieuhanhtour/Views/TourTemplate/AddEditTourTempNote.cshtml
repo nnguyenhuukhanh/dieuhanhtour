@@ -1,0 +1,51 @@
+﻿@model TourTempNote
+
+
+<link href="~/AdminLTE/plugins/bootstrap-wysihtml5/css/bootstrap3-wysihtml5.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/bootstrap-wysihtml5/js/bootstrap3-wysihtml5.all.js"></script>
+<script src="~/Asset/js/Tourtemplate/TourtemplateControl.js"></script>
+<script>
+    //$(function () {
+    //    $('.textarea').wysihtml5()
+    //})
+</script>
+
+<form id="frmEditTourtempNote">
+    <div class="row">
+        <input type="hidden" asp-for="Code" />
+        <div class="col-md-12">
+            <div class="box">
+                @*<div class="box-header">
+            <div class="box-title">
+                <h4>Ghi chú đầu tour</h4>
+            </div>
+        </div>*@
+                <h4>Đầu tour</h4>
+                <div class="box-body">
+                    <textarea class="textarea" asp-for="Header" placeholder="Place some text here"
+                              style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box">
+                @*<div class="box-header">
+            <div class="box-title">
+                <h4>Ghi chú cuối tour</h4>
+            </div>
+        </div>*@
+                <h4>Cuối tour</h4>
+                <div class="box-body">
+                    <textarea class="textarea" asp-for="Footer" placeholder="Place some text here"
+                              style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <input type="button" value="Cập nhật" class="btn btn-primary" id="btCapnhatEditTourtempNote" />
+        </div>
+    </div>
+</form>
+
+
+

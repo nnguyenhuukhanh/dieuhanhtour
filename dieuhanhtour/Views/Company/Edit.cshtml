@@ -1,0 +1,141 @@
+﻿@model CompanyViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Cập nhật đối tác
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlCompany")">Danh sách đối tác</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form asp-action="Edit" id="frmCompany">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @*<input type="hidden" asp-for="Company.companyId" id="txtcompanyId" />*@
+                        <input type="hidden" asp-for="Company.chinhanh" id="txtchinhanh" />
+                        @Html.HiddenFor(x => x.Referer)
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Code</label>
+                            <input asp-for="Company.companyId" class="form-control text-center" readonly />
+                            <span asp-validation-for="Company.companyId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label class="control-label">Tên</label>
+                            <input asp-for="Company.name" class="form-control" />
+                            <span asp-validation-for="Company.name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label class="control-label">Tên đầy đủ</label>
+                            <input asp-for="Company.fullname" class="form-control" />
+                            <span asp-validation-for="Company.fullname" class="text-danger"></span>
+                        </div>
+                        <!--<div class="form-group col-md-2">
+                            <label class="control-label">Quốc gia</label>-->
+                            @*<select asp-items="@ViewBag.quocgia" asp-for="Company.nation" class="form-control select2" style="width:100%"></select>*@
+                            <!--<input asp-for="Company.nation" class="form-control" />
+                            <span asp-validation-for="Company.nation" class="text-danger"></span>
+                        </div>-->
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Quốc gia</label>
+                            <select asp-items="@ViewBag.quocgia" asp-for="Company.nation" class="form-control select2" style="width:100%"></select>
+
+                            <span asp-validation-for="Company.natione" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Fax</label>
+                            <input asp-for="Company.fax" class="form-control" />
+                            <span asp-validation-for="Company.fax" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label class="control-label">Địa chỉ</label>
+                            <input asp-for="Company.address" class="form-control" />
+                            <span asp-validation-for="Company.address" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Điện thoại</label>
+                            <input asp-for="Company.tel" class="form-control" />
+                            <span asp-validation-for="Company.tel" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Contact</label>
+                            @Html.TextBoxFor(model => model.Company.contact, new { @id = "txtcontact", @class = "form-control datepicker  glyphicon glyphicon-calendar" })
+                            <span asp-validation-for="Company.contact" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Head office</label>
+                            <input asp-for="Company.headoffice" class="form-control" />
+                            <span asp-validation-for="Company.headoffice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Mã số thuế</label>
+                            <input asp-for="Company.msthue" class="form-control" />
+                            <span asp-validation-for="Company.msthue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                            <a href="@Context.Session.GetString("urlCompany")" class="btn btn-default">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/Asset/js/Company/CompanyControl.js"></script>
+    <script>
+        $(function () {
+            // $('.select2').select2();
+
+            // $(".datepicker").mask("99/99/9999");
+
+            //dropdownlist valid
+            //$.validator.addMethod('notEqual', function (value, element, arg) {
+            //    return arg != value;
+            //}, 'Phải chọn một mục nào đó!');
+
+        });
+
+            //$(document).ready(function () {
+
+            //    $('#frmCompany').validate({
+            //        rules: {
+            //            'Company.name': {
+            //                required: true
+            //            },
+            //            'Company.fullname': {
+            //                required: true
+            //            },
+            //            'Company.nation': {
+            //                required: true
+            //            }
+            //        },
+            //        messages: {
+            //            'Company.name': {
+            //                required: 'Phải nhập tên đối tác'
+            //            },
+            //            'Company.fullname': {
+            //                required: 'Phải nhập tên đối tác'
+            //            },
+            //            'Company.nation': {
+            //                required: 'Phải nhập quốc gia'
+            //            }
+            //        }
+            //    });
+            //});
+
+    </script>
+}

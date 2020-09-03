@@ -1,0 +1,103 @@
+﻿@model TourProgTemp
+
+<script src="~/Asset/js/Tourtemplate/EditTourProgTempControl.js"></script>
+<script>
+    $('#txtNgayTemp').off('blur').on('blur', function () {       
+        var ngay = $(this).val();
+        if (ngay > 0) {
+            $('#ddlAddSrv').val("ITI").trigger('change');
+            $('.dropdownhanhtrinh').show();
+        }
+        else {
+            $('.dropdownhanhtrinh').hide();
+        }
+        var sgtcode = $('#txtAddSrvCode').val();
+        var url = "/TourTemplate/ngayExists";
+        $.get(url, { sgtcode: sgtcode, ngay: ngay }, function (result) {
+            if (result) {
+                $("#btThemdvTourProgTemp").attr('disabled', false).removeClass('ui-state-disabled');
+                 $("#iktSongayTemp").html("<span style='color:red'></span>");
+            }
+            else {
+                $("#btThemdvTourProgTemp").attr('disabled', true).addClass('ui-state-disabled');                
+                $("#iktSongayTemp").html("<span style='color:red'>Ngày thứ " + ngay + " đã có</span>");
+                var url = "/TourTemplate/newDateTourProgTemp";
+                $.get(url, { sgtcode: sgtcode }, function (data) {
+                    if (data > 0) {
+                        $('#txtNgayTemp').focus();
+                        $('#txtNgayTemp').val(data);
+                    }
+                });
+            }
+        })
+    });
+</script>
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h4 class="modal-title text-uppercase">Chọn loại dịch vụ </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <form id="frmAddSrvTourProg">
+                    <input type="hidden" asp-for="Code" id="txtAddSrvCode" />
+                    <input type="hidden" asp-for="stt" />
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Loại dịch vụ</label>
+                        <select asp-for="srvtype" asp-items="@ViewBag.dichvu" id="ddlAddSrv" class="form-control select2" style="width:100%"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Loại tiền</label>
+                        <select asp-for="currency" asp-items="@ViewBag.ngoaite" class="form-control select2" style="width:100%"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Ngày thứ</label>
+                        <input asp-for="date" class="form-control text-center" id="txtNgayTemp" />
+                        <span id="iktSongayTemp"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">VAT vào</label>
+                        <input asp-for="vatin" class="form-control text-right" />
+                        <span asp-validation-for="vatin" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">VAT ra</label>
+                        <input asp-for="vatout" class="form-control text-right" />
+                        <span asp-validation-for="vatout" class="text-danger"></span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-3 dropdownhanhtrinh" style="display:none;">
+                        <label class="control-label">Hành trình từ</label>
+                        <select id="ddlhanhtrinhtu" asp-for="tour_item" asp-items="@ViewBag.hanhtrinhtu" class="form-control select2" style="width:100%"></select>
+                    </div>
+                    <div class="form-group col-md-3 dropdownhanhtrinh" style="display:none;">
+                        <label class="control-label">Đi đến</label>
+                        <select id="ddlhanhtrinhden" asp-for="srvnode" asp-items="@ViewBag.hanhtrinhden" class="form-control select2" style="width:100%"></select>
+                    </div>
+                    @*<div class="clearfix"> </div>*@
+                    <div class="form-group col-md-12">
+                        <input type="button" class="btn btn-primary" id="btThemdvTourProgTemp" value="Thêm" />
+                        <button class="btn btn-default dong">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

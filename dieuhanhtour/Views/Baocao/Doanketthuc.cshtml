@@ -1,0 +1,121 @@
+﻿@model IEnumerable<dieuhanhtour.ViewModel.DoanbatdauViewModel>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@{
+    ViewData["Title"] = "Doanketthuc";
+}
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/DoanketthucControl.js"></script>
+}
+<section class="content-header">
+    <h1>
+        Báo cáo các đoàn kết thúc tour
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <form  id="frmDoanketthuc">
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            Từ ngày
+                            <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                        </div>
+                        <div class="col-md-2">
+                            Đến ngày
+                            <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                        </div>
+                        <div class="col-md-2">
+                            Thị trường
+                            @*<select class="form-control " id="cboPhongban" name="thitruong"></select>*@
+                            <select class="form-control " asp-items="@ViewBag.dsphongban" name="thitruong"></select>
+                        </div>
+                        <br />
+                        <div class="col-md-2">
+                            <span class="btn-group">
+                                <button type="submit" formaction="/Baocao/Doanketthuc" formmethod="get" class="btn btn-default" ><i class="fa fa-search"></i></button>
+                                <button type="submit" formaction="/Baocao/DoanketthuctoExcel" formmethod="post" class="btn btn-success" title="Export danh sách to Excel"><i class="fa fa-file-excel-o"></i></button>                               
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <table class="table mytable">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>
+                                    Khối / Phòng
+                                </th>
+                                <th>
+                                    SGT code
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Bắt đầu
+                                </th>
+                                <th>
+                                    Kết thúc
+                                </th>
+                                <th>
+                                    Lộ trình
+                                </th>
+                                <th>
+                                    Doanh thu
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">@item.stt</td>
+                                        <td>
+                                            @item.tenphong
+                                        </td>
+                                        <td>
+                                            @item.sgtcode
+                                        </td>
+                                        <td class="text-center">
+                                            @item.sk
+                                        </td>
+                                        <td>
+                                            @item.batdau.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.ketthuc.ToString("dd/MM/yyyy")
+                                        </td>
+                                       
+                                        <td>
+                                            @item.lotrinh
+                                        </td>
+                                        <td class="text-right">
+                                            @Html.Raw(String.Format("{0:#,##0}", item.doanhthu))
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ChuyenbayViewModel>
+
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@{
+    ViewData["Title"] = "Chuyenbaydi";
+}
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/ChuyenbaydiControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Báo cáo các chuyến bay đi
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form  id="frmChuyenbaydi">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+                            <div class="col-md-2">
+                                Sân bay
+                                <div class="has-feedback">
+                                    <input type="text" class="form-control text-center text-uppercase" value="@ViewBag.sanbay" title="Nhập sân bay" name="sanbay" />
+                                    <span class="fa fa-plane form-control-feedback text-muted"></span>
+                                </div>
+
+                            </div>
+                            <div class="col-md-2">
+                                Thị trường
+                                <select class="form-control " asp-items="@ViewBag.dsphongban" name="thitruong"></select>
+                            </div>
+                            <br />
+                            <div class="col-md-2">
+                                <span class="btn-group">
+                                    <button type="submit" class="btn btn-default" formaction="/Baocao/Chuyenbaydi" formmethod="get" ><i class="fa fa-search"></i></button>
+                                    <button type="submit" class="btn btn-success" formaction="/Baocao/ChuyenbayditoExcel" formmethod="post"><i class="fa fa-file-excel-o"></i></button>                                  
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <table class="table mytable">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>
+                                    Ngày
+                                </th>
+                                <th>
+                                    Đoàn
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Thông tin chuyến bay
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center" style="width:20px;">@item.stt</td>
+                                        <td style="width:100px;">
+                                            @item.ngayden.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td class="text-center" style="width:150px">
+                                            @item.sgtcode
+                                        </td>
+                                        <td class="text-center" style="width:20px;">
+                                            @item.sk
+                                        </td>
+                                        <td>
+                                            @item.lotrinh
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+

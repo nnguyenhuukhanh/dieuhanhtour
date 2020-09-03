@@ -1,0 +1,151 @@
+﻿@model Dieuxe
+
+<script src="~/Asset/js/Tour/XeControl.js"></script>
+<script>
+     var locktour = $("#txtLocktour").val();
+        if (locktour.length > 0) {
+            $('#btAddEditXe').addClass('disabled');
+        }
+</script>
+<style>
+    .error {
+        border: 1px solid #A94442;
+    }
+
+    label.error {
+        background: url("/image/unchecked.gif") no-repeat;
+        padding-left: 16px;
+        margin-left: .3em;
+    }
+
+    label.valid {
+        background: url("/image/checked.gif") no-repeat;
+        display: block;
+        width: 16px;
+        height: 16px
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="box">
+            <div class="box-header">
+                <h4 class="box-title text-uppercase">@ViewBag.cartitle </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dongxe"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <form asp-action="AddXe" id="frmAddXe">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @*<input asp-for="Idxe" class="form-control" type="hidden" />*@
+                    <input id="utxtId" asp-for="Sgtcode" class="form-control" type="hidden" />
+                    @*<input asp-for="Sttxe" class="form-control" type="hidden" />*@
+                    <input id="hidcn" asp-for="chinhanh" type="hidden" />
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin được điều chỉnh bởi điều hành - Đội xe</legend>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Từ ngày</label>
+                            <input asp-for="Ngaydon" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" type="text" />
+                            <span asp-validation-for="Ngaydon" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Đến ngày</label>
+                            <input asp-for="Denngay" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" type="text" />
+                            <span asp-validation-for="Denngay" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">SK</label>
+                            <input asp-for="Sokhach" class="form-control text-center" />
+                            <span asp-validation-for="Sokhach" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Giờ hẹn xe</label>
+                            <input asp-for="Giodon" class="form-control time text-center time" />
+                            <span asp-validation-for="Giodon" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="Diemdon" class="control-label">Điểm hẹn xe</label>
+                            <input asp-for="Diemdon" class="form-control" />
+                            <span asp-validation-for="Diemdon" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="Loaixe" class="control-label">Loại xe</label>
+                            <select asp-for="Loaixe" asp-items="@ViewBag.loaixe" class="form-control"></select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Lộ trình</label>
+                            <input asp-for="Lotrinh" class="form-control" />
+                            <span asp-validation-for="Lotrinh" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Ghi chú</label>
+                            <input asp-for="Ghichu" class="form-control" />
+                            <span asp-validation-for="Ghichu" class="text-danger"></span>
+                        </div>
+                    </fieldset>
+                    <fieldset class="groupbox-border" >
+                        <legend class="groupbox-border">Thông tin được điều chỉnh bởi Đội xe</legend>
+                        <div class="form-group col-md-5">
+                            <label class="control-label">Chủ xe</label>
+                            <select asp-for="SupplierId" asp-items="@ViewBag.supplier" disabled="disabled" class="form-control"> </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Số xe</label>
+                            <input asp-for="Soxe" class="form-control" disabled="disabled" />
+                            <span asp-validation-for="Soxe" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Lái xe</label>
+                            <input asp-for="Laixe" class="form-control" disabled="disabled"/>
+                            <span asp-validation-for="Laixe" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Điện thoại</label>
+                            <input asp-for="Dienthoai" class="form-control" disabled="disabled" />
+                            <span asp-validation-for="Dienthoai" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Đơn giá/KM(VND)</label>
+                            <input asp-for="Dongiakm" class="form-control text-right numbers" asp-format="{0:#,##0}" disabled="disabled"/>
+                            <span asp-validation-for="Dongiakm" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">KM nhiên liệu</label>
+                            <input asp-for="Kmnl" class="form-control text-center" disabled="disabled"/>
+                            <span asp-validation-for="Kmnl" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="Km" class="control-label">Số KM</label>
+                            <input asp-for="Km" class="form-control text-center" disabled="disabled"/>
+                            <span asp-validation-for="Km" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Chi phí thuê ngoài</label>
+                            <input asp-for="Chiphi" class="form-control text-right numbers" asp-format="{0:#,##0}" disabled="disabled" />
+                            <span asp-validation-for="Chiphi" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">CN</label>
+                            <select asp-for="chinhanh" asp-items="@ViewBag.chinhanh"  class="form-control" style="width:100%"> </select>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="box-footer col-md-12">
+                <input type="button" class="btn btn-primary" id="btAddEditXe" value="Đồng ý" />
+                <button type="button" class="btn btn-default dongxe">Huỷ</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

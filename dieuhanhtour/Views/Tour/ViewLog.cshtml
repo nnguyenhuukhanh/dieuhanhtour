@@ -1,0 +1,53 @@
+﻿@model Tourprog
+
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-gray">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Xem log @ViewBag.sgtcode</h4>
+        </div>
+        <div class="modal-body" style="max-height: 400px !important; overflow-y:auto">
+            <span style="white-space: pre-line">
+                <b>Log của dịch vụ @Model.srvtype: </b><br />
+                @Html.Raw(@Model.logfile)
+                @{
+                    string sLogsrv = "";
+                    <BR />
+                    if (Model.srvtype == "SSE")
+                    {
+                        sLogsrv = "<br/>**********************PHẦN CHI TIẾT **********************<br/>";
+                        List<Sightseeing> lst = (List<Sightseeing>)ViewBag.logservice;
+                        <br />
+                        foreach (Sightseeing s in lst)
+                        {
+                            sLogsrv = sLogsrv + "<br/> STT: " + s.Stt;
+                            sLogsrv = sLogsrv + s.logfile + "<br/>";
+                        }
+                    }
+
+                    if (Model.srvtype == "HTL")
+                    {
+                        sLogsrv = "<br/>**********************PHẦN CHI TIẾT **********************<br/>"; //reset
+
+                        List<Hotel> lst = (List<Hotel>)ViewBag.logservice;
+
+
+                        foreach (Hotel s in lst)
+                        {
+                            sLogsrv = sLogsrv + "<br/> STT: " + s.stt;
+                            sLogsrv = sLogsrv + s.logfile + "<br/>";
+                        }
+                    }
+                }
+                @Html.Raw(@sLogsrv)
+            </span>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        </div>
+
+    </div>
+</div>

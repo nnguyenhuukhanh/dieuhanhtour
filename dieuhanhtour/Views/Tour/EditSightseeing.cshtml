@@ -1,0 +1,451 @@
+﻿@model Tourprog
+
+
+
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+    $('#ddlChinhanh_').off('change').on('change', function () {
+
+        var chinhanh = $(this).val();
+        var url = "/Tour/getUserByChinhanh";
+
+        var ddlNguoidh_ = $('#ddlNguoidh_');
+        ddlNguoidh_.empty();
+
+        if (chinhanh != null && chinhanh != '') {
+            $.getJSON(url, { chinhanh: chinhanh }, function (nguoidhs) {
+                var result = JSON.parse(nguoidhs);
+                if (result != null && !jQuery.isEmptyObject(result)) {
+                    $.each(result, function (index, nguoidh) {
+
+                        ddlNguoidh_.append($('<option/>', {
+                            value: nguoidh.Username,
+                            text: nguoidh.Hoten
+                        })).trigger('change');
+                    });
+                }
+                else {
+                    ddlNguoidh_.empty();
+                };
+            });
+        }
+
+    });
+</script>
+@{
+    var see = (List<SightseeingViewModel>)ViewBag.listsee;
+    var macn = Context.Session.GetString("chinhanh");
+}
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+
+<form id="frmEditSightseeing">
+    <input id="hidId" type="hidden" asp-for="Id" />
+    <input id="hidCode" type="hidden" asp-for="sgtcode" />
+    <input id="hidStt" type="hidden" asp-for="stt" />
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="modal-title text-uppercase">Chi tiết tuyến điểm tham quan </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="Id" id="txtIdSee" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin tuyến tham quan</legend>
+
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Tham quan</label>
+
+                                <select asp-for="tour_item" asp-items="@ViewBag.dtq" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Đơn vị tổ chức tour</label>
+                                <select asp-for="supplierid" asp-items="@ViewBag.supplier" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Số khách</label>
+                                <input type="number" class="form-control" asp-for="pax" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Giá người lớn</label>
+                                <input type="text" class="form-control text-right numbers" asp-for="unitpricea" asp-format="{0:#,##0}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Trẻ em</label>
+                                <input type="number" class="form-control" asp-for="childern" />
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Giá trẻ em</label>
+                                <input type="text" class="form-control text-right numbers" asp-for="unitpricec" asp-format="{0:#,##0}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Giá theo nhóm</label>
+                                <input type="text" class="form-control text-right numbers" asp-for="amount" asp-format="{0:#,##0}" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Loại tiền</label>
+                                <select asp-for="currency" asp-items="@ViewBag.ngoaite" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Ghi chú</label>
+                                <input type="text" class="form-control" asp-for="srvnode" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Trạng thái</label>
+                                <select asp-for="status" asp-items="@ViewBag.status" class="form-control" style="width:100%"></select>
+                            </div>
+                            @if (Convert.ToBoolean(Context.Session.GetString("Admin")) == true)
+                            {
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">CN Triển khai </label>
+                                    <select id="ddlChinhanh_" asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Điều hành </label>
+                                    <select id="ddlNguoidh_" asp-for="dieuhanh" asp-items="@ViewBag.dieuhanh" class="form-control select2" style="width:100%"></select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Triển khai </label>
+                                    <input asp-for="chinhanh" class="form-control" readonly />
+
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Điều hành </label>
+                                    <input asp-for="dieuhanh" class="form-control" readonly />
+                                </div>
+                            }
+
+
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về công nợ</legend>
+                            <div class="form-group">
+                                <div class="col-md-1">
+                                    <label>Công nợ</label>
+                                    <div class="checkbox text-center">
+                                        <input asp-for="debit" type="checkbox" class="minimal" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <label class="control-label">Nơi book</label>
+                                    <select asp-for="srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">VAT vào</label>
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatin" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">VAT ra</label>
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatout" />
+                                </div>
+
+
+
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-12">
+
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Điểm tham quan của đoàn</legend>
+                            <div style="overflow-x:auto">
+                                <table class="table mytable text-nowrap " id="tbSee">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="width:7%"><i class="fa fa-gear"></i></th>
+                                            <th>Điểm tham quan</th>
+                                            <th>Số serial</th>
+                                            @*<th>Tổ chức tour</th>*@
+                                            <th>HTTT</th>
+                                            <th>Người lớn</th>
+                                            <th>Giá</th>
+                                            <th>Trẻ em</th>
+                                            <th>Giá</th>
+                                            @*<th>Tổng chi phí</th>*@
+                                            <th>VAT vào</th>
+                                            <th>VAT ra</th>
+                                            <th style="display:none;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in @see)
+                                        {
+                                            <tr id="rowseetemp_@item.Sightseeing.Id">
+                                                <td class="text-center" width="7%">
+                                                    @if (Model.dieuhanh == Context.Session.GetString("username"))// || Context.Session.GetString("Admin").ToString().ToLower() == "true")
+                                                    {
+                                                        <a id=@Html.Raw("btnEdit_" + item.Sightseeing.Id) class="Edit" data-id="@item.Sightseeing.Id" href="javascript:;"><i class=" fa fa-edit"></i></a>
+                                                        <a id=@Html.Raw("btnUpdate" + item.Sightseeing.Id) class="Update" data-id="@item.Sightseeing.Id" href="javascript:;" style="display:none"><i class="fa fa-save"></i></a>
+                                                        <a class="Cancel text-danger" href="javascript:;" style="display:none"><i class="fa fa-close"></i></a>
+                                                        <a class="Delete text-danger" data-id="@item.Sightseeing.Id" href="javascript:;"><i class="fa fa-trash"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class=" fa fa-edit"></i>
+                                                        <i class="fa fa-trash"></i>
+                                                    }
+                                                </td>
+                                                <td class="Id" style="display:none"><span>@item.Sightseeing.Id</span></td>
+                                                <td class="codedtq">
+                                                    <span>@item.Diemtq</span>
+                                                    <select id=@Html.Raw("dleditdtq_"+item.Sightseeing.Id) asp-for="@item.Sightseeing.Codedtq" asp-items="@ViewBag.dtq" class="form-control select2" style="width:100%;"></select>
+                                                </td>
+                                                <td class="serialedit">
+                                                    <span>@item.Sightseeing.Serial</span>
+                                                    <input id="txtserial" type="text" class="form-control  input-sm" asp-for="@item.Sightseeing.Serial" style="display:none;width:100px;" />
+                                                </td>
+                                                <td class="debitedit" style="display:none;">
+                                                    <span> @item.Sightseeing.Debit</span>
+                                                    <select id=@Html.Raw("dldebit_"+item.Sightseeing.Id) asp-for="@item.Sightseeing.Debit" asp-items="@ViewBag.debit" class="form-control select2" style="width:100%;"></select>
+                                                </td>
+                                                <td class=" httt">
+                                                    <span> @item.Sightseeing.Httt</span>
+                                                    <select id=@Html.Raw("dledithttt_"+item.Sightseeing.Id) asp-for="@item.Sightseeing.Httt" asp-items="@ViewBag.httt" class="form-control input-sm select2" style="width:100%"></select>
+
+                                                </td>
+                                                <td class="pax text-center">
+                                                    <span>@item.Sightseeing.Pax</span>
+                                                    <input id=@Html.Raw("txtpax_"+item.Sightseeing.Id) type="text" class="form-control text-center input-sm" asp-for="@item.Sightseeing.Pax" style="display:none;" />
+                                                </td>
+                                                <td class="text-right paxprice">
+                                                    <span> @string.Format("{0:#,##0}", @item.Sightseeing.PaxPrice)</span>
+                                                    <input id="txtunitprice" type="text" asp-format="{0:#,##0}" class="form-control input-sm text-right numbers" asp-for="@item.Sightseeing.PaxPrice" style="display:none;" />
+                                                </td>
+                                                <td class="childern text-center">
+                                                    <span>@item.Sightseeing.Childern</span>
+                                                    <input id=@Html.Raw("txtpaxv_"+item.Sightseeing.Id) type="text" class="form-control text-center input-sm" asp-for="@item.Sightseeing.Childern" style="display:none;" />
+                                                </td>
+                                                <td class="text-right childernprice">
+                                                    <span>@string.Format("{0:#,##0}", @item.Sightseeing.ChildernPrice)</span>
+                                                    <input type="text" id="txtUnipricev" asp-format="{0:#,##0}" class="form-control text-right numbers  input-sm" asp-for="@item.Sightseeing.ChildernPrice" style="display:none;" />
+                                                </td>
+
+                                                <td class="vatin text-center">
+                                                    <span>@item.Sightseeing.Vatin</span>
+                                                    <input type="text" id="txtvatin" class="form-control text-center input-sm" asp-for="@item.Sightseeing.Vatin" style="display:none;" />
+                                                </td>
+
+                                                <td class="text-center vatout">
+                                                    <span> @item.Sightseeing.Vatout</span>
+                                                    <input type="text" id="txtvatout" class="form-control text-center numbers  input-sm" asp-for="@item.Sightseeing.Vatout" style="display:none;" />
+                                                </td>
+
+
+                                                <td style="display:none;">
+                                                    <script>
+
+                                               $("table").on("click", "#btnUpdate" +@item.Sightseeing.Id, function () {
+
+                                                var btn = $(this);
+                                                var idsee = btn.data("id");
+
+                                                   var row = btn.closest("tr");
+
+                                                    $("td", row).each(function () {
+                                                        if ($(this).find("input").length > 0) {
+
+                                                            var input = $(this).find('input');
+                                                            var span = $(this).find('span');
+                                                            span.show();
+                                                            input.hide();
+                                                            span.html(input.val());
+                                                        }
+
+                                                        if ($(this).find(".select2").length > 0) {
+                                                            debugger
+                                                            var span = $(this).find('span');
+                                                            span.show();
+                                                            span.html($(this).find(".select2").select2().val());
+                                                            $(this).find(".select2").select2().next().hide();
+                                                        }
+
+                                                    });
+                                                       row.find(".Edit").show();
+                                                       btn.hide();
+                                                        row.find(".Cancel").hide();
+                                                        row.find(".Delete").show();
+                                                   //debugger
+                                                       var seetemp = {};
+                                                           seetemp.Id = row.find(".Id").find("span").html();
+                                                            seetemp.sgtcode = $("#hidCode").val();
+                                                            seetemp.stt = $("#hidStt").val();
+                                                           seetemp.Codedtq = row.find(".codedtq").find('span').html();//
+                                                           seetemp.Serial = row.find(".serialedit").find('span').html();//
+                                                            seetemp.Debit = row.find(".debitedit").find('span').html();
+                                                            seetemp.Pax = row.find(".pax").find('span').html();
+                                                            seetemp.PaxPrice = row.find(".paxprice").find('span').html();
+                                                            seetemp.Childern = row.find(".childern").find('span').html();
+                                                            seetemp.ChildernPrice = row.find(".childernprice").find('span').html();
+                                                           seetemp.Vatin = row.find(".vatin").find('span').html();
+                                                           seetemp.Vatout = row.find(".vatout").find('span').html();
+                                                            seetemp.httt = row.find(".httt").find('span').html();
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "/Tour/EditSee",
+                                                                data: { entity: seetemp },
+                                                                success: function () {
+                                                                    var id = $('#txtIdSee').val();//Id Tourprogtemp
+                                                                    EditTourProgControl.EditSightseeing(id);//hien lai chi tiet dich vu tham quan
+
+                                                                }
+                                                            });
+
+                                               });
+
+
+
+                                                    </script>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    @*@if (Model.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("Admin").ToString().ToLower() == "true")
+                                        {*@
+                                    <tfoot class="tfoot" style="display:none;">
+                                        <tr>
+                                            <td class="text-center" width="7%">
+                                                <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                                                <a class="fSeeUpdate" href="javascript:;" style="display:none"><i class="fa fa-save"></i></a>
+                                                <a class="fSeeCancel text-danger" href="javascript:;" style="display:none"><i class="fa fa-close"></i></a>
+                                            </td>
+
+                                            <td class="code" style="display:none"><input type="text" class="txtcode" value="@ViewBag.Code" />  </td>
+                                            <td class="stt" style="display:none"><input type="text" class="txtstt" value="@ViewBag.stt" />  </td>
+
+                                            <td class="diemtq">
+                                                <select id="dldtqadd" asp-items="@ViewBag.dtq" class="form-control select2 input-sm" style="width:100%;"></select>
+                                            </td>
+                                            <td class="serial">
+                                                <input type="text" class="form-control txtserial input-sm" style="display:none;" />
+                                            </td>
+                                            <td class="debiteadd" style="display:none;">
+                                                <select id="dldebitadd" asp-items="@ViewBag.debit" class="form-control select2 input-sm"></select>
+                                            </td>
+                                            <td class="httt">
+                                                <select id="dlhtttadd" asp-items="@ViewBag.httt" class="form-control input-sm select2" style="width:100%"></select>
+                                            </td>
+                                            <td class="paxadd">
+                                                <input type="text" class="form-control txtpaxadd numbers text-center input-sm" style="display:none;" />
+                                            </td>
+                                            <td class="text-right paxpriceadd">
+                                                <input type="text" class="form-control txtpaxpriceadd numbers text-right input-sm" style="display:none;" />
+                                            </td>
+                                            <td class="childernadd">
+                                                <input type="text" class="form-control txtchildernadd numbers text-center input-sm" style="display:none;" />
+                                            </td>
+                                            <td class="text-right childernpriceadd">
+                                                <input type="text" class="form-control txtchildernpriceadd numbers text-right input-sm" style="display:none;" />
+                                            </td>
+
+                                            <td class="vatin">
+                                                <input type="text" class="form-control txtvatin numbers text-center input-sm" style="display:none;" />
+                                            </td>
+                                            <td class="vatout">
+                                                <input type="text" class="form-control txtvatout numbers text-center input-sm" style="display:none;" />
+                                            </td>
+
+
+
+                                        </tr>
+
+                                    </tfoot>
+                                    @*}*@
+                                </table>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+
+
+
+                    <div class="box-footer col-md-12">
+                        @if (Model.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("roleId") == "superadmin" || (Context.Session.GetString("chinhanh") == Model.chinhanh && Context.Session.GetString("Admin").ToString().ToLower() == "true"))
+                        {
+                            <input type="button" class="btn btn-primary" id="btThemSightseeing" value="Cập nhật" />
+                        }
+                        <button type="button" class="btn btn-default dong">Hủy</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+
+        var dl = $('.codedtq').find('.select2');
+        dl.hide();
+
+        //var dldebit = $('.editdebit').find('.select2');
+        //dldebit.hide();
+
+        var dladddiemtq = $('.diemtq').find('.select2');
+        dladddiemtq.hide();
+
+        //var dladddebit = $('.debit').find('.select2');
+        //dladddebit.hide();
+
+        var dlhtttedit = $('.httt').find('.select2');
+        dlhtttedit.hide();
+
+        var dldebitadd = $('.debiteadd').find('.select2');
+        dldebitadd.hide();
+
+        var dldebitedit = $('.debitedit').find('.select2');
+        dldebitedit.hide();
+    });
+
+    $('#dldtqadd').off('change').on('change', function () {
+        var pax = Number($('#txtPax').val());
+        var paxe = Number($('#txtChildern').val());
+        $('.txtpaxvadd').val(paxe);
+        $('.txtpaxadd').val(pax);
+        var code = $(this).val();
+        var url = "/Diemtq/GetDiemtqById";
+        $.getJSON(url, { code: code }, function (diemtqs) {
+            if (diemtqs != null) {
+                console.log(diemtqs);
+                $('.txtunitpricee').val(addCommas(diemtqs.giave)); // gia nguoi lon
+                $('.txtUnipricev').val(addCommas(diemtqs.giatreem));// gia tre em
+
+                $('.txtvatin').val(diemtqs.vatvao);
+                $('.txtvatout').val(diemtqs.vatra);
+                $('#dldebitadd').val(diemtqs.congno);
+                $('#dldebitadd').select2().trigger('change');
+            }
+        });
+    });
+
+
+</script>

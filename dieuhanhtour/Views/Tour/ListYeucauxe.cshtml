@@ -1,0 +1,163 @@
+﻿@model IEnumerable<Dieuxe>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Asset/js/Tour/XeControl.js"></script>
+<input id="utxtId" type="hidden" value="@ViewBag.sgtcode" />
+<script>
+     $(document).ready(function () {
+            // lấy thông tin khoá tour trong Edit tour
+             var locktour = $("#txtLocktour").val();
+        });
+</script>
+
+<div class="showYeucauxe" style="overflow-x:auto">
+    <table class="table mytable text-nowrap" id="tbXe">
+        <thead>
+            <tr>
+                <th class="text-center" width="5%"><i class="fa fa-gear"></i></th>
+                <th>Triển khai</th>
+                <th>Loại xe</th>
+                <th>SK</th>
+                <th>Từ ngày</th>
+                <th>Đến ngày</th>
+                <th>Chủ xe</th>
+                <th>Số xe</th>
+                <th>Lái xe</th>
+                <th>Điện thoại</th>
+                <th>Giờ hẹn xe</th>
+                <th>Điểm hẹn xe</th>
+                <th>KM</th>
+                <th>Giá VND/KM</th>
+                <th>Thành tiền</th>
+                <th>Lộ trình</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr id="row_@item.Idxe">
+                <td class="text-center text-nowrap">
+                    <a class="ViewLogDx text-success" href="javascript:;" title="Xem log file" data-id="@item.Idxe"><i class="fa fa-file-text"></i></a>|
+                    @if (item.chinhanh == ViewBag.cn)
+                    {
+                        <a id=@Html.Raw("btnEditxe_"+item.Idxe) title="Cập nhật yêu cầu xe" href="javascript:;" data-id="@item.Idxe" data-cn="@item.chinhanh" data-session="@ViewBag.cn"><i class="fa fa-edit"></i></a><span> | </span>
+                        <a id=@Html.Raw("btnDelxe_" + item.Idxe) href="javascript:;" title="Xoá yêu cầu xe" class="text-danger" data-cn="@item.chinhanh" data-session="@ViewBag.cn" data-id="@item.Idxe"><i class=" fa fa fa-trash"></i></a>
+                    }
+                    else
+                    {
+                        <i class="fa fa-edit"></i><span> | </span>
+                        <i class="fa fa-trash"></i>
+                    }
+
+                    
+                </td>
+                <td class="text-center">
+                    @item.chinhanh
+                </td>
+                <td class="text-center">
+                    @item.Loaixe
+                </td>
+                <td class="text-center">
+                    @item.Sokhach
+                </td>
+                <td>
+                    @Html.Raw(item.Ngaydon.HasValue ? item.Ngaydon.Value.ToString("dd/MM/yyyy") : string.Empty)
+                </td>
+                <td>
+                    @Html.Raw(item.Denngay.HasValue ? item.Denngay.Value.ToString("dd/MM/yyyy") : string.Empty)
+                </td>
+                <td>
+                    @item.SupplierId
+                </td>
+                <td>
+                    @item.Soxe
+                </td>
+                <td>
+                    @item.Laixe
+                </td>
+                <td>
+                    @item.Dienthoai
+                </td>
+                <td>
+                    @Html.Raw(String.IsNullOrEmpty(item.Giodon) ? " : " : item.Giodon)
+                </td>
+                <td>
+                    @item.Diemdon
+                </td>
+                <td>
+                    @item.Km
+                </td>
+                <td class="text-right">
+                    @Html.Raw(String.Format("{0:#,##0}", item.Dongiakm))
+                </td>
+                <td class="text-right">
+                    @Html.Raw(string.Format("{0:#,##0}", item.Chiphi))
+                </td>
+                <td>
+                    @item.Lotrinh
+                </td>
+
+                <td style="display:none">
+                    <script>
+                            $("table").on("click", "#btnEditxe_" +@item.Idxe, function () {
+                                var cn = $(this).data('cn');
+                                var session = $(this).data('session')
+                                if (session != cn) {
+                                    alert("Bạn không có quyền cập nhật yêu cầu xe này.")
+                                }
+                                else {
+                                    var id = $(this).data('id');
+                                    XeControl.EditXe(id);
+                                }
+                            })
+
+                            $("table").on("click", "#btnDelxe_" +@item.Idxe, function () {
+                                if (locktour.length > 0) {
+                                    alert("Tour đã bị khoá, không thể xoá");
+                                    return;
+                                }
+                                else {
+                                    var id = $(this).data('id');
+                                    var session = $('#txtSession').val();
+                                    var operator = $('#txtOperator').val();
+                                    if (session != operator) {
+                                        alert("Bạn không có quyền xoá khách này");
+                                        return;
+                                    }
+                                    else {
+
+                                        if (confirm("Xoá điều xe này?")) {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Tour/DelXe",
+                                                data: { id: id }
+                                            });
+                                            $('#row_' + id).remove();
+                                        }
+                                    }
+                                }
+                            });
+                    </script>
+                </td>
+            </tr>
+            }
+        </tbody>
+        @*@if (Context.Session.GetString("chinhanh") == ViewBag.cn)
+        {*@
+            <tfoot class="tfoot" style="display:none;">
+                <tr>
+                    <td class="text-center">
+                        <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tfoot>
+        @*}*@
+        </table>
+</div>
+<div id="ModelYeucauxe">
+    <div class="Yeucauxe"></div>
+</div>
+
+<div id="ModalViewLogDx" class="modal fade in" role="dialog" style="display:none">
+    <div class="DetailLogDx"></div>
+</div>

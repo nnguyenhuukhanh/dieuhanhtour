@@ -1,0 +1,70 @@
+﻿@model country
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Thêm quốc gia
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="/Countries">danh sách quốc gia</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Code</label>
+                        <input asp-for="Code" class="form-control text-center" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Code Anpha</label>
+                        <input asp-for="Codealpha" class="form-control" />
+                        <span asp-validation-for="Codealpha" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Phiên âm tiếng việt</label>
+                        <input asp-for="Nation" class="form-control" />
+                        <span asp-validation-for="Nation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Phiên âm quốc tế</label>
+                        <input asp-for="Natione" class="form-control" />
+                        <span asp-validation-for="Natione" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Mã điện thoại</label>
+                        <input asp-for="TelCode" class="form-control text-center" maxlength="3" />
+                        <span asp-validation-for="TelCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label class="control-label">Lục địa</label>
+                        <input asp-for="Continent" class="form-control" />
+                        <span asp-validation-for="Continent" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label class="control-label">Lãnh thổ</label>
+                        <input asp-for="Territory" class="form-control" />
+                        <span asp-validation-for="Territory" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="submit" value="Thêm" class="btn btn-primary" />
+                        <a href="/Countries" class="btn btn-default">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

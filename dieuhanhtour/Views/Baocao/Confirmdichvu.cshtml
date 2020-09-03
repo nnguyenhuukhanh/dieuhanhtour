@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ConfirmdichvuViewModel>
+
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@{
+    ViewData["Title"] = "Confirm Dichvu";
+}
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/ConfirmdichvuControl.js"></script>
+}
+<section class="content-header">
+    <h1>
+        Confirm dịch vụ
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Các đoàn có ngày cập nhật dịch vụ</legend>
+                        <form id="frmConfirmdichvu">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    Từ ngày
+                                    <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                                </div>
+                                <div class="col-md-2">
+                                    Đến ngày
+                                    <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                                </div>
+                                <div class="col-md-2">
+                                    Thị trường
+                                    <select class="form-control " asp-items="@ViewBag.dsphongban" name="thitruong"></select>
+                                </div>
+                                <br />
+                                <div class="col-md-4">
+                                    <span class="btn-group">
+                                        <button type="submit" formaction="/Baocao/Confirmdichvu" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                        <button type="submit" formaction="/Baocao/ConfirmdichvuToExcel" formmethod="post" class="btn btn-success" title="Export danh sách to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <table class="table mytable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">STT</th>
+                                <th>
+                                    Đơn vị
+                                </th>
+                                <th>
+                                    Nội dung
+                                </th>
+                                <th style="width:100px;">
+                                    Trạng thái
+                                </th>
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center" style="width:20px;">@item.stt</td>
+                                        <td >
+                                            @item.donvi
+                                        </td>
+                                        <td>
+                                            @item.noidung
+                                        </td>
+                                        <td class="text-center" style="width:20px;">
+                                            @item.trangthai
+                                        </td>                                        
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

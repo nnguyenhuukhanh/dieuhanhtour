@@ -1,0 +1,72 @@
+﻿@model TourTemplate
+
+@{
+    ViewData["Title"] = "Create";
+}
+<section class="content-header">
+    <h1>
+        Thêm tour template
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlTourtemplate")">Danh sách các tour template</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Mã</label>
+                            <input asp-for="Code" class="form-control text-center" readonly />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Loại tour</label>
+                            <select asp-items="@ViewBag.tourkind" asp-for="Tourkind" class="form-control select2"></select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Tên tour</label>
+                            <input asp-for="Tentour" class="form-control" />
+                            <span asp-validation-for="Tentour" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Chủ đề tour</label>
+                            <input asp-for="Chudetour" class="form-control" />
+                            <span asp-validation-for="Chudetour" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label class="control-label">Tuyến tham quan</label>
+                            <select asp-items="@ViewBag.tuyentq" asp-for="Tuyentq" class="form-control select2"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Số ngày</label>
+                            <input asp-for="Songay" class="form-control text-center" />
+                            <span asp-validation-for="Songay" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Chi nhánh</label>
+                            <select asp-for="Chinhanh" asp-items="@ViewBag.listChinhanh" class="form-control select2" style="width:100%"></select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Tạo" class="btn btn-primary" />
+                            <a href="@Context.Session.GetString("urlTourtemplate")" class="btn btn-default">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    
+}

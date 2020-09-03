@@ -1,0 +1,39 @@
+﻿@model Thanhpho
+    <script src="~/Asset/js/Thanhpho/ThanhphoControl.js"></script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h4 class="box-title"><strong>Cập nhật thành phố / Thị xã</strong></h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dongtp"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form id="frmEditThanhpho">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group col-md-3">
+                            <label>Mã TP / Thị xã</label>
+                            <input asp-for="Matp" class="form-control text-center" readonly  />
+                            <span asp-validation-for="Matp" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-9">
+                            <label>Tên Thành phố / Thị xã</label>
+                            <input asp-for="Tentp" class="form-control" />
+                            <span asp-validation-for="Tentp" class="text-danger"></span>
+                        </div>
+                        <input asp-for="Matinh" class="form-control" type="hidden" id="txtMatinh" />
+                        <div class="form-group col-md-12">
+                            <input type="button" value="Cập nhật" id="btUpdateThanhpho" class="btn btn-primary" />
+                            <input type="button" value="Huỷ" class="btn btn-default dongtp" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+

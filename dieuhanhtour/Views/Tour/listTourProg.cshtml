@@ -1,0 +1,454 @@
+﻿@model IEnumerable<Tourprog>
+@*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
+
+@*<script src="~/AdminLTE/plugins/jquery-ui/js/jquery-ui.js"></script>*@
+
+
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+
+<style>
+    #bodydv {
+        list-style-type: none;
+    }
+
+        #bodydv tr.hovered {
+            background: silver;
+        }
+
+    .bodydv tr {
+        margin: 5px;
+        padding: 5px;
+        width: 800px;
+        border: 1px solid #ccc;
+        background-color: #ddf;
+    }
+
+    /*quy dinh style khi dragging*/
+    #bodydv tr.ui-draggable-dragging {
+        -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+        -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+        box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+    }
+
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
+
+<div class="showcttour" style="overflow-x:auto; max-height:300px;" >
+    <input type="hidden" id="txtIdCopy" />
+    <table class="table-striped mytable text-nowrap" id="tbTourProg">
+        <thead>
+            <tr>
+                <th class="text-center" width="5%"><i class="fa fa-gear"></i></th>
+                @*<th class="text-center">STT</th>*@
+                <th class="text-center" width="5%">Triển khai</th>
+                <th class="text-center" width="5%">Trạng thái</th>
+                <th class="text-center" width="5%">Ngày</th>
+                <th class="text-center" width="5%">Ngày tháng</th>
+                <th class="text-center" width="5%">Giờ</th>
+                <th class="text-center" width="5%">Dịch vụ</th>
+                <th class="text-center" width="5%">Loại tiền</th>
+                <th>Chương trình</th>
+                <th>Ghi chú</th>
+                <th width="10%">Điều hành</th>
+            </tr>
+        </thead>
+        <tbody id="bodydv">
+            @foreach (var item in Model)
+            {
+                <tr id="row_@item.Id" data-stt="@item.stt" stt="@item.stt" ngay="@item.date" cotid="@item.sgtcode" machinhanh="@item.chinhanh" dieuhanh="@item.dieuhanh" operators="@item.nguoihuydv" trangthai="@item.status">
+                    @*<td>@item.stt</td>*@
+                    <td class="text-center">
+                        <a class="ViewLog text-success" href="javascript:;" title="Xem logfile" data-id="@item.Id" data-srvtyp="@item.srvtype" data-cn="@item.chinhanh" data-session="@ViewBag.cn"><i class="fa fa-file-text"></i></a><span> | </span>
+
+                        @if (item.chinhanh == ViewBag.cn || Context.Session.GetString("roleId") == "superadmin")
+                        {
+                            <a id=@Html.Raw("btnEditpro_" + item.Id) class="EditProg" href="javascript:;" title="Cập nhật " data-id="@item.Id" data-srvtyp="@item.srvtype" data-cn="@item.chinhanh" data-session="@ViewBag.cn"><i class="fa fa-edit"></i></a> <span> | </span>
+                            @if (item.dieuhanh == Context.Session.GetString("username"))
+                            {
+                                <a id=@Html.Raw("btnInsertpro_" + item.Id) href="javascript:;" title="Chèn dịch vụ" data-id="@item.Id"><i class="fa fa-plus-circle text-warning"></i></a> <span> | </span>
+                                <a id=@Html.Raw("btnCopypro_" + item.Id) href="javascript:;" title="Copy dịch vụ" data-id="@item.Id" data-date="@item.date"><i class="fa fa-copy text-aqua"></i></a> <span> | </span>
+                                <a id=@Html.Raw("btnPastepro_" + item.Id) href="javascript:;" title="Paste dịch vụ" data-id="@item.Id" data-stt="@item.stt"><i class="fa  fa-paste text-light-blue"></i></a> <span> | </span>
+                                <a href="javascript:;" data-id="@item.Id" data-toggle="tooltip" title="Xoá dịch vụ" class="text-danger DelTourProg_"><i class="fa fa-trash"></i></a>
+                            }
+                            else
+                            {
+                                <i class="fa fa-plus-circle"></i> <span> | </span>
+                                <i class="fa fa-copy"></i><span> | </span>
+                                <i class="fa  fa-paste"></i><span> | </span>
+                                <i class="fa fa-trash"></i>
+                            }
+
+                        }
+                        else
+                        {
+                            <i class="fa fa-edit"></i> <span> | </span>
+                            <i class="fa fa-plus-circle"></i> <span> | </span>
+                            <i class="fa fa-copy"></i><span> | </span>
+                            <i class="fa  fa-paste"></i><span> | </span>
+                            <i class="fa fa-trash"></i>
+                        }
+
+                    </td>
+                    @*<td class="text-center">@item.stt</td>*@
+                    <td class="text-center">
+                        @if (item.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("Admin").ToString().ToLower() == "true" || Context.Session.GetString("roleId") == "superadmin")
+                        {
+                            <select id=@Html.Raw("ddlcn_" + item.Id) class="form-control" asp-for="@item.chinhanh" asp-items="@ViewBag.chinhanh" data-cn="@item.chinhanh" data-dieuhanh="@item.dieuhanh" data-id="@item.Id" style="border:none; background:inherit"></select>
+                        }
+                        else
+                        {
+                            <select class="form-control" disabled asp-for="@item.chinhanh" asp-items="@ViewBag.chinhanh" style="border:none; background:inherit"></select>
+                        }
+                    </td>
+                    <td class="text-center">@item.status</td>
+                    <td class="text-center">@item.date</td>
+
+                    @switch (item.logfile)
+                    {
+                        case string x when x.StartsWith("S"):
+                            <td style="background-color:#FF7800">@item.logfile</td>
+                            break;
+                        default:
+                            <td>@item.logfile</td>
+                            break;
+                    }
+                    <td class="text-center">@item.time</td>
+                    <td class="text-center">@item.srvtype</td>
+                    <td class="text-center">@item.currency</td>
+                    <td>
+                        @item.tour_item
+                    </td>
+                    <td>@item.srvnode</td>
+                    <td>@item.dieuhanh</td>
+                    <td style="display:none;">
+
+                        <script>
+                            $("table").on("click", "#btnEditpro_" +@item.Id, function () {
+                            var id = $(this).data('id'); //sgtcode
+                            var cn = $(this).data('cn');
+
+                            var session = $(this).data('session');
+
+                            if (session != cn) {
+                                alert("Bạn không có quyền cập nhật chương trình này.");
+                                return;
+                            }
+                            if (locktour.length > 0) {
+                                alert("Tour đã khoá, không thể cập nhật thông tin.");
+                                return;
+                            }
+                            else {
+                                var srvtype = $(this).data('srvtyp');
+                                switch (srvtype) {
+                                    case 'LUN':
+                                    case 'DIN':
+                                    case 'BRK':
+                                        EditTourProgControl.EditLunchProg(id);
+                                        break;
+                                    case 'SHW':
+                                    case 'WPU':
+                                   // case 'TRS':
+                                        EditTourProgControl.EditShowProg(id);
+                                        break;
+                                    case 'PAC':
+                                        EditTourProgControl.EditPacProg(id);
+                                        break;
+                                    case 'HTL':
+                                    case "CRU":
+                                        EditTourProgControl.EditHotelProg(id);
+                                        break;
+                                    case 'OTH':
+                                        EditTourProgControl.EditOtherProg(id);
+                                        break;
+                                    case 'TXT':
+                                    case 'GUI':
+                                    case 'CAR':
+                                    case 'CAG':
+                                        EditTourProgControl.EditTextProg(id);
+                                        break;                                   
+                                    case 'AIR':
+                                        EditTourProgControl.EditAirProg(id);
+                                        break;
+                                    case 'TRA':
+                                        EditTourProgControl.EditTrainProg(id)
+                                        break;
+                                    case 'SHP':
+                                        EditTourProgControl.EditShopProg(id);
+                                        break;
+                                    case 'SSE':
+                                        EditTourProgControl.EditSightseeing(id);
+                                        break;
+                                    case 'ITI':
+                                        EditTourProgControl.EditItineraryProg(id);
+                                        break;
+                                    default:
+                                        //EditTourProgControl.loadTourProg();
+                                        EditTourProgControl.EditOverseaProg(id);
+                                        break;
+                                }
+                            }
+                            });
+                            $("table").on("click", "#btnInsertpro_" +@item.Id, function () {
+                                var id = $(this).data('id');
+                                $.ajax({
+                                    url: '/Tour/InsertTourSrvProg',
+                                    data: { id: id },
+                                    type: 'GET',
+                                    success: function (data) {
+                                        $('.showcttour').hide(500);
+                                        $('#ModalTourProg').show(500);
+                                        $('.TourProg').html(data);
+                                    }
+                                });
+                            });
+                            $("table").on("click", "#btnCopypro_" +@item.Id, function () {
+                                var date = $(this).data('date');
+                                if (date > 0) {
+                                    alert("Không thể copy ngày dịch vụ");
+                                    return;
+                                }
+                                else {
+                                    var id = $(this).data('id');
+                                    $("#txtIdCopy").val(id);
+                                    var copytext = document.getElementById("txtIdCopy");
+                                    copytext.select();
+                                    document.execCommand("copy");
+                                }
+                            });
+                            $("table").on("click", "#btnPastepro_" +@item.Id, function (e) {
+                                navigator.clipboard.readText()
+                                    .then((text) => {
+                                        $("#txtIdCopy").val(text);
+                                    })
+                                var id = $("#txtIdCopy").val();
+                                var stt = $(this).data('stt');
+                                if (id.length == 0) {
+                                    alert("Vui lòng chọn dịch vụ cần copy");
+                                    return;
+                                }
+                                else {
+                                    $.ajax({
+                                        url: '/Tour/copyTourSrvProg',
+                                        data: { id: id,stt:stt },
+                                        type: 'POST',
+                                        success: function (response) {
+                                            if (response.status) {
+                                                alert("Copy dịch vụ thành công");
+                                                EditTourProgControl.loadTourProg();
+                                            }
+                                            else {
+                                                alert(response.mes);
+                                            }
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            if (xhr.status == "200") {
+                                                EditTourProgControl.loadTourProg();
+                                            } else {
+                                                alert(xhr.status);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                           
+                            $("table").on("change", "#ddlcn_" +@item.Id, function () {
+                            var chinhanh = $(this).val();
+                            var cn = $(this).data('cn');
+                            var id = $(this).data('id');
+                            if (chinhanh != cn) {
+                                if (confirm('Bạn muốn chi nhánh ' + chinhanh + ' triển khai dịch vụ này?')) {
+                                        $.ajax({
+                                    type: "POST",
+                                            url: "/Tour/changeChinhanh",
+                                            data: {id:id,chinhanh:chinhanh},
+                                            dataType: "json",
+                                            success: function (response) {
+                                            if (response) {
+                                                EditTourProgControl.loadTourProg();
+                                            }
+                                        },
+                                             error: function (xhr, ajaxOptions, thrownError) {
+                                            if (xhr.status == "200") {
+                                                EditTourProgControl.loadTourProg();
+                                            } else {
+                                                alert(xhr.status);
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+                            EditTourProgControl.loadTourProg();
+                        });
+
+                        </script>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+        @*@if( ViewBag.operators == Context.Session.GetString("username"))// || ( ViewBag.tourcn == Context.Session.GetString("chinhanh") && Context.Session.GetString("Admin").ToString().ToLower() == "true"))
+            {*@
+
+        <tfoot class="tfoot" style="display:none;">
+            <tr>
+                <td class="text-center">
+                    <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                </td>
+            </tr>
+        </tfoot>
+
+        @*}*@
+    </table>
+</div>
+<div id="ModalTourProg" style="display:none">
+    <div class="TourProg"></div>
+</div>
+<div id="ModalDelTourProg" class="modal fade in" role="dialog" style="display:none">
+    <div class="DelTourProg"></div>
+</div>
+
+
+<script src="~/AdminLTE/plugins/jquery/js/bootbox.min.js"></script>
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+
+<script>
+    
+    var locktour = $('#txtLocktour').val();
+    function updateVitri(event, ui) {
+
+        var stt = null;
+        if (ui.item[0].attributes["stt"] != null) {
+            stt = ui.item[0].attributes["stt"].value;
+        }
+
+        var Code = "0", ngay = "0", machinhanh="",trangthai="",dieuhanh="",operators="";
+         //Code
+        if (ui.item[0].attributes["cotid"] != null) {
+            Code = ui.item[0].attributes["cotid"].value;
+        }
+    //ngay
+        if (ui.item[0].attributes["ngay"] != null) {
+            ngay = ui.item[0].attributes["ngay"].value;
+        }
+
+        //chinhanh
+        if (ui.item[0].attributes["machinhanh"] != null) {
+            machinhanh = ui.item[0].attributes["machinhanh"].value;
+        }
+        // Điều hành
+        if (ui.item[0].attributes["dieuhanh"] != null) {
+            dieuhanh = ui.item[0].attributes["dieuhanh"].value;
+        }
+        //// Operators
+        if (ui.item[0].attributes["operators"] != null) {
+            operators = ui.item[0].attributes["operators"].value;
+        }
+        // trang thai
+        if (ui.item[0].attributes["trangthai"] != null) {
+            trangthai = ui.item[0].attributes["trangthai"].value;
+        }
+        var sortedIDs = $("#bodydv").sortable("toArray");
+        console.log(sortedIDs);
+        if (ngay > 0 || machinhanh != '@ViewBag.cn' || trangthai=="OK" ) {
+
+            alert('Bạn không thể thay đổi thông tin của dịch vụ.');
+            location.reload();
+            return;
+        }
+        else
+        {
+            if (dieuhanh == '@Context.Session.GetString("username")' || (operators.length >0 && operators == '@Context.Session.GetString("username")'))
+            {
+                if (confirm('Bạn muốn thay đổi vị trí dịch vụ này?')) {
+                    capnhatstt(sortedIDs, Code);
+                }
+                else {
+                    location.reload();
+                }
+
+            }
+            else {
+                    alert("Chỉ có điều hành của tour này mới được phép thay đổi vị trí dịch vụ này.")
+                    location.reload();
+                }
+        }
+
+    }
+
+    function capnhatstt(sortedIDs, Code) {
+        var vurl = '@Url.Action("CapNhatSTT", "Tour")';
+
+             return $.ajax({
+                 contentType: 'application/json; charset=utf-8',
+                 dataType: 'json',
+                 type: 'POST',
+                 url: vurl,
+                 data: JSON.stringify(sortedIDs),
+                 success: function (result) {
+                     if (result != "ERR") {
+                         //listdichvu(idtour);//load lai danh sach dich vu
+                         location.reload();
+                     } else {
+                         alert('Có lỗi, thông báo với quản lý!')
+                     }
+                 },
+                 error: function (xhr, ajaxOptions, thrownError) {
+                     if (xhr.status == "200") {
+                         location.reload();
+                        // listdichvu(idtour);//load lai danh sach dich vu
+                     } else {
+                         alert(xhr.status);
+                     }
+                 }
+             });
+        console.log(sortedIDs);
+
+    }
+
+    function handleMauDVDrop(event, ui) {
+       // alert('da tha');
+        $(this).addClass('correct');
+        $(this).addClass("ui-state-highlight");
+    }
+
+    $(function () {
+
+        //$("#bodydv").sortable({
+        //    revert: true,
+        //    update: updateVitri
+        //});
+        $("#bodydv").sortable({
+            items:"tr:not(.ui-state-disabled)"
+            ,revert: true
+            ,cursor:'pointer'
+            ,update: updateVitri
+        });
+
+        $("#bodydv tr").droppable({
+            classes: {
+                "ui-droppable-hover": "ui-state-hover"
+            },
+            //accept: '.theli',
+            hoverClass: 'hovered',
+            drop: handleMauDVDrop
+        });
+
+    });
+
+    function loadTourprog() {
+         $.ajax({
+                url: '/Tour/listTourProg',
+                data: { id: Code },
+                type: 'GET',
+                success: function (data) {
+                    $('#cttour').html(data);
+                }
+            });
+    }
+
+</script>

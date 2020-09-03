@@ -1,0 +1,86 @@
+﻿@model Tourprog
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<script>
+    $('#ddlChinhanh_').off('change').on('change', function () {
+        var chinhanh = $(this).val();
+        var url = "/Tour/getUserByChinhanh";
+        var ddlNguoidh_ = $('#ddlNguoidh_');
+        ddlNguoidh_.empty();
+
+        if (chinhanh != null && chinhanh != '') {
+            $.getJSON(url, { chinhanh: chinhanh }, function (nguoidhs) {
+                var result = JSON.parse(nguoidhs);
+                if (result != null && !jQuery.isEmptyObject(result)) {
+
+                    ddlNguoidh_.append($('<option/>', {
+                        value: null,
+                        text: ""
+                    }));
+                    $.each(result, function (index, nguoidh) {
+
+                        ddlNguoidh_.append($('<option/>', {
+                            value: nguoidh.Username,
+                            text: nguoidh.Hoten
+                        }));
+                    });
+                }
+                else {
+                    ddlNguoidh_.empty();
+                };
+            });
+        }
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h4 class="modal-title text-uppercase">Mô tả hành trình</h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form id="frmEditHanhtrinhProgTemp">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="sgtcode" />
+                        <input type="hidden" asp-for="stt" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Hành trình</legend>
+                            <div class="form-group col-md-5 ">
+                                <label class="control-label">Từ</label>
+                                <select id="ddlhanhtrinhtu" asp-for="tour_item" asp-items="@ViewBag.hanhtrinhtu" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="control-label">Đi đến</label>
+                                <select id="ddlhanhtrinhden" asp-for="srvnode" asp-items="@ViewBag.hanhtrinhden" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Trạng thái</label>
+                                <select asp-for="status" asp-items="@ViewBag.status" class="form-control" style="width:100%"></select>
+                            </div>                        
+                            <div class="form-group col-md-12">
+                                @if (Model.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("roleId") == "superadmin" || (Context.Session.GetString("chinhanh") == Model.chinhanh && Context.Session.GetString("Admin").ToString().ToLower() == "true"))
+                                {
+                                    <input type="button" class="btn btn-primary" id="btCapnhatHanhtrinhTourProgTemp" value="Cập nhật" />
+                                }
+                                <button type="button" class="btn btn-default dong">Hủy</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,22 @@
+﻿@model KhachTour
+
+<script src="~/Asset/js/Tour/DsKhachControl.js"></script>
+
+
+<div class="modal-dialog modal-lg" style="width: 900px !important;">
+    <div class="modal-content">
+        <div class="modal-header bg-gray">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Xem log @ViewBag.sgtcode</h4>
+        </div>
+        <div class="modal-body" style="max-height: 400px !important; overflow-y:auto">
+
+            <span style="white-space: pre-line">@Model.Logfile</span>
+
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        </div>
+
+    </div>
+</div>

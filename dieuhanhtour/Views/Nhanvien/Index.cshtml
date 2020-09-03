@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Users>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@section Scripts{
+    <script src="~/Asset/js/Nhanvien/NhanvienControl.js"></script>
+  
+}
+<section class="content-header">
+    <h1>
+        Danh sách nhân viên
+        @*<small>abc</small>*@
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="list">danh sách nhân viên</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row" >
+        <div class="box">
+            <div class="box-header">
+                <form asp-action="index" method="get">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="input-group">
+                                <input type="text" placeholder="Tìm thông tin" class="form-control" id="txtSearchNhanvien" />
+                                <span class="input-group-btn">
+                                    @*<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>*@
+                                    <a asp-action="create" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box-body" style="max-height:300px; overflow-x:auto;">
+                <div class="col-md-12">
+                    <table class="table text-nowrap mytable " id="tbNhanvien">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><i class="fa fa-gear"></i></th>
+                                <th>Username</th>
+                                <th>Họ tên</th>
+                                <th>Tạo tour</th>
+                                <th>Đóng tour</th>
+                                <th>Booking</th>
+                                <th>Báo cáo</th>
+                                <th>In</th>
+                                <th>Active</th>
+                                <th>Chi nhánh</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbBodyNhanvien">
+                            @foreach (var item in Model)
+                            {
+                            <tr class="selected" data-active="@item.Active">
+                                <td class="text-center" >
+                                    <a asp-controller="nhanvien" asp-action="edit" asp-route-id="@item.Username"><i class="fa fa-edit"></i></a>
+                                    @*<a asp-controller="nhanvien" asp-action="Delete" asp-route-id="@item.Username" class="text-danger" onclick="return confirm ('Xóa nhân viên @item.Username ?')"><i class="fa fa-trash"></i></a>*@
+                                </td>
+                                <td>
+                                    @item.Username
+                                </td>
+                                <td>@item.Hoten</td>
+                                <td class="text-center">
+                                    @Html.Raw((bool)item.Newtour ? "Có" : "Không")
+                                </td>
+                                <td class="text-center">
+                                    @Html.Raw((bool)item.Dongtour ? "Có" : "Không")
+                                </td>
+                                <td class="text-center">
+                                    @Html.Raw((bool)item.Booking ? "Có" : "Không")
+                                </td>
+                                <td class="text-center">
+                                    @Html.Raw((bool)item.Report ? "Có" : "Không")
+                                </td>
+                                <td class="text-center">
+                                    @Html.Raw((bool)item.Print ? "Có" : "Không")
+                                </td>
+                                <td class="text-center">
+                                    @Html.Raw((bool)item.Active ? "Làm việc" : "Nghỉ việc")
+                                </td>
+                                <td class="text-center">
+                                    @item.chinhanh
+                                </td>
+
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

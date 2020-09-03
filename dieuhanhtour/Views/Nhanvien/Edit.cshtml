@@ -1,0 +1,194 @@
+﻿@model Users
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@section Scripts {
+    @*<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+    <script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>*@
+    @*<script>
+        $(function () {
+            $('input[type="checkbox"].minimal').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue'
+            });
+        });
+    </script>*@
+<style>
+     select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+       
+    }
+</style>
+}
+
+<section class="content-header">
+    <h1>
+        Cập nhật quyền @Model.Username
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="/Nhanvien">danh sách nhân viên</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @*<input type="hidden" asp-for="chinhanh" />*@
+                        <input type="hidden" asp-for="Username" />
+                        @*<input type="hidden" asp-for="Password" />*@
+                        <div class="form-group col-md-3">
+                            Họ tên
+                            <input type="text" class="form-control text-uppercase" asp-for="Hoten" autocomplete="off" />
+                            <span asp-validation-for="Hoten" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            Mật khẩu
+                            <input type="password" class="form-control" asp-for="Password" autocomplete="off" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3">
+                            Email
+                            <input type="text" class="form-control" asp-for="Email" autocomplete="off" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            Phòng ban
+                            <select asp-for="Maphong" asp-items="@ViewBag.phongban" class="form-control"></select>
+                            <span asp-validation-for="Maphong" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            Chi nhánh
+                            <select asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control"></select>
+                            <span asp-validation-for="chinhanh" class="text-danger"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Newtour" class="minimal" /> Tạo tour
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Dongtour" class="minimal" /> Khoá tour
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Catalogue" class="minimal" /> Xem mục lục
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Booking" class="minimal" /> Booking dịch vụ
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Report" class="minimal" /> Xem báo cáo
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Showprice" class="minimal" /> Hiển thị giá
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Print" class="minimal" /> Được phép in
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Doixe" class="minimal" /> Đội xe
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Maybay" class="minimal" /> Phòng vé
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Huongdan" class="minimal" /> Hướng dẫn
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Sales" class="minimal" /> Sales
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Vetq" class="minimal" /> Vé tham quan
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="khachle" class="minimal" /> Khách lẻ
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="khachdoan" class="minimal" /> Khách đoàn
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Admin" class="minimal" /> Admin
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Active" class="minimal" /> Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                            <a href="/Nhanvien" class="btn btn-default">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

@@ -1,0 +1,193 @@
+﻿@model TourprogHotelTempViewModel
+
+
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script src="~/Asset/js/Tourtemplate/EditTourProgTempControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+</script>
+
+<form id="frmEditHotelProgTemp">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="modal-title text-uppercase">Chi tiết về khách sạn </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="TourProgTemp.Id" id="txtIdHotelProgTemp" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Khách lưu trú tại khách sạn</legend>
+
+                            <div class="col-md-6">
+                                <label>Diễn giải</label>
+                                <input type="text" class="form-control" asp-for="TourProgTemp.tour_item" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label>Khách sạn</label>
+                                <select asp-for="TourProgTemp.supplierid" asp-items="@ViewBag.supplier" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Loại tiền</label>
+                                <select asp-for="TourProgTemp.currency" asp-items="@ViewBag.ngoaite" class="form-control" style="width:100%"></select>
+                               
+                            </div>
+                            <div class="col-md-2">
+                                <label>Phòng nội bộ</label>
+                                <input type="text" class="form-control text-center numbers" asp-for="TourProgTemp.foc" />
+                            </div>
+                            <div class="col-md-8">
+                                <label>Ghi chú</label>
+                                <input type="text" class="form-control" asp-for="TourProgTemp.srvnode" />
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về công nợ</legend>
+                            <div class="form-horizontal">
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input asp-for="TourProgTemp.debit" class="minimal" /><span class="text-bold"> &nbsp; Công nợ</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="col-md-1 control-label">Nơi book</label>
+                                <div class="col-md-5">
+                                    <select asp-for="TourProgTemp.srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                                </div>
+                                <label class="col-md-1 control-label">VAT vào</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control text-center numbers" asp-for="TourProgTemp.vatin" />
+                                </div>
+                                <label class="col-md-1 control-label">VAT ra</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control text-center numbers" asp-for="TourProgTemp.vatout" />
+                                </div>
+                            </div>
+                            
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về phòng và chi phí</legend>
+                            <input type="hidden" asp-for="Hoteltemp.Id" />
+                            <div class="col-md-2">
+                                <label>Loại tiền</label>
+                                <select asp-for="Hoteltemp.currency" asp-items="@ViewBag.ngoaite" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <div class="col-md-10">
+                                <label>Ghi chú / Loại phòng</label>
+                                <input asp-for="Hoteltemp.note" class="form-control" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>SGL</label>
+                                <input asp-for="Hoteltemp.sgl" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá SGL</label>
+                                <input type="text" asp-for="Hoteltemp.sglcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>DBL</label>
+                                <input asp-for="Hoteltemp.dbl" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input asp-for="Hoteltemp.dblpax" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá DBL</label>
+                                <input type="text" asp-for="Hoteltemp.dblcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>DBL EXT</label>
+                                <input asp-for="Hoteltemp.extdbl" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá DBL EXT</label>
+                                <input type="text" asp-for="Hoteltemp.extdblcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>TWN</label>
+                                <input asp-for="Hoteltemp.twn" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input asp-for="Hoteltemp.twnpax" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá TWN</label>
+                                <input type="text" asp-for="Hoteltemp.twncost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>TWN EXT</label>
+                                <input asp-for="Hoteltemp.exttwn" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá TWN EXT</label>
+                                <input type="text" asp-for="Hoteltemp.exttwncost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>Home stay</label>
+                                <input type="text" asp-for="Hoteltemp.homestay" class="form-control text-center numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input type="text" asp-for="Hoteltemp.homestaypax" class="form-control text-center numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá / khách</label>
+                                <input type="text" asp-for="Hoteltemp.homestaycost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Ghi chú</label>
+                                <input type="text" asp-for="Hoteltemp.homestaynote" class="form-control" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>OTHER</label>
+                                <input asp-for="Hoteltemp.oth" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input asp-for="Hoteltemp.othpax" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá OTHER</label>
+                                <input type="text" asp-for="Hoteltemp.othcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Ghi chú OTHER</label>
+                                <input asp-for="Hoteltemp.othtype" class="form-control" />
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="box-footer col-md-12">
+                        <input type="button" class="btn btn-primary" id="btCapnhatHotelProgTemp" value="Cập nhật" />
+                        <button class="btn btn-default dong">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

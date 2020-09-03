@@ -1,0 +1,131 @@
+﻿@model IEnumerable<DoanhuyViewModel>
+
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@{
+    ViewData["Title"] = "Doanhuytour";
+}
+@section Scripts{
+    <script src="~/Asset/js/Baocao/DoanhuyControl.js"></script>
+}
+<section class="content-header">
+    <h1>
+        Danh sách đoàn huỷ
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Liệt kê các đoàn có ngày huỷ</legend>
+                        <form id="frmDoanhuy">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    Từ ngày
+                                    <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                                </div>
+                                <div class="col-md-2">
+                                    Đến ngày
+                                    <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                                </div>
+                                <div class="col-md-2">
+                                    Thị trường
+                                    <select class="form-control " asp-items="@ViewBag.dsphongban" name="thitruong"></select>
+                                </div>
+                                <br />
+                                <div class="col-md-4">
+                                    <span class="btn-group">
+                                        <button type="submit" formaction="/Baocao/Doanhuy" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                        <button type="submit" formaction="/Baocao/DoanhuyToExcel" formmethod="post" class="btn btn-success" title="Export danh sách to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="table mytable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">STT</th>
+                                <th>
+                                    Code Đoàn
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Thời gian
+                                </th>
+                                <th>
+                                    Khách sạn
+                                </th>
+                                <th>
+                                    Nhà hàng
+                                </th>
+                                <th>
+                                    Cano
+                                </th>
+                                <th>
+                                    Văn nghệ
+                                </th>
+                                <th>
+                                    Rối nước
+                                </th>
+                                <th>
+                                    Xe lửa
+                                </th>
+                                <th>
+                                    Vận chuyển khác
+                                </th>
+                                <th>
+                                    Hướng dẫn
+                                </th>
+                                <th>
+                                    Xe
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center" style="width:20px;">@item.stt</td>
+                                        <td>
+                                           @item.sgtcode
+                                        </td>
+                                        <td class="text-center"style="width:20px;">
+                                           @item.sk
+                                        </td>
+                                        <td class="text-center" >
+                                            @item.thoigian
+                                        </td>
+                                        <td>@item.khachsan</td>
+                                        <td>@item.nhahang</td>
+                                        <td>@item.cano</td>
+                                        <td>@item.vannghe</td>
+                                        <td>@item.roinuoc</td>
+                                        <td>@item.xelua</td>
+                                        <td>@item.vanchuyenkhac</td>
+                                        <td>@item.huongdan</td>
+                                        <td>@item.xe</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

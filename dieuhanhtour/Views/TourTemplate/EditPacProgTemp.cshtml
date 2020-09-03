@@ -1,0 +1,116 @@
+﻿@model TourProgTemp
+
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script src="~/Asset/js/Tourtemplate/EditTourProgTempControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+</script>
+<form id="frmEditPacProgTemp">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="modal-title text-uppercase">Chi tiết về tour Package </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="Id" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Đơn vị bán tour</legend>
+                            <div class="form-horizontal">
+                                <label class="col-md-1 control-label">Diễn giải</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" asp-for="tour_item" />
+                                </div>
+                                <label class="col-md-1 control-label">Đơn vị</label>
+                                <div class="col-md-3">
+                                    <select asp-for="supplierid" asp-items="@ViewBag.supplier" class="form-control select2" style="width:100%"></select>
+                                </div>
+                                <label class="col-md-1 control-label">Loại tiền</label>
+                                <div class="col-md-2">
+                                    <select asp-for="currency" asp-items="@ViewBag.ngoaite" class="form-control select2" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    @*<div class="col-md-12" style="padding-top:5px;"> <hr style="border-color: #3E5C9A;" /> </div>*@
+                    <div class="col-sm-8">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Giá theo khách</legend>
+                            <div class="form-horizontal">
+                                <label class="col-md-3 control-label">Chi phí người lớn</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control text-right numbers" asp-for="unitpricea" asp-format="{0:#,##0.00}" />
+                                </div>
+                                <label class="col-md-3 control-label">Chi phí trẻ em</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control text-right numbers" asp-for="unitpricec" asp-format="{0:#,##0.00}" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Giá theo nhóm</legend>
+                            <div class="form-horizontal">
+                                <label class="col-md-5 control-label">Tổng chi phí</label>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control text-right numbers" asp-for="amount" asp-format="{0:#,##0.00}" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về công nợ</legend>
+                            <div class="form-horizontal">
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input asp-for="debit" class="minimal" /><span class="text-bold"> &nbsp; Công nợ</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="col-md-1 control-label">Nơi book</label>
+                                <div class="col-md-5">
+                                    <select asp-for="srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                                </div>
+                                <label class="col-md-1 control-label">VAT vào</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatin" />
+                                </div>
+                                <label class="col-md-1 control-label">VAT ra</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatout" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Ghi chú tour Package</legend>
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" asp-for="srvnode" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="box-footer col-md-12">
+                        <input type="button" class="btn btn-primary" id="btCapnhatPacProgTemp" value="Cập nhật" />
+                        <button class="btn btn-default dong">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,119 @@
+﻿@model Tourprog
+
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+<script>
+    $('#ddlChinhanh_').off('change').on('change', function () {
+
+        var chinhanh = $(this).val();
+        var url = "/Tour/getUserByChinhanh";
+
+        var ddlNguoidh_ = $('#ddlNguoidh_');
+        ddlNguoidh_.empty();
+
+        if (chinhanh != null && chinhanh != '') {
+            $.getJSON(url, { chinhanh: chinhanh }, function (nguoidhs) {
+                var result = JSON.parse(nguoidhs);
+                if (result != null && !jQuery.isEmptyObject(result)) {
+
+                    //ddlNguoidh_.append($('<option/>', {
+                    //    value: null,
+                    //    text: ""
+                    //}));
+                    $.each(result, function (index, nguoidh) {
+
+                        ddlNguoidh_.append($('<option/>', {
+                            value: nguoidh.Username,
+                            text: nguoidh.Hoten
+                        })).trigger('change');
+                    });
+                }
+                else {
+                    ddlNguoidh_.empty();
+                };
+            });
+        }
+
+    });
+</script>
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h4 class="modal-title text-uppercase">@ViewBag.cartitle </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form id="frmEditCarProgTemp">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="sgtcode" />
+                        <input type="hidden" asp-for="stt" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Yêu cầu xe</legend>
+                            <div class="form-group col-md-6 ">
+                                <label class="control-label">Yêu cầu</label>
+                                <input type="text" class="form-control" asp-for="tour_item" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">@ViewBag.ghichu</label>
+                                <input type="text" class="form-control" asp-for="srvnode" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Trạng thái</label>
+                                <select asp-for="status" asp-items="@ViewBag.status" class="form-control" style="width:100%"></select>
+                            </div>
+                            @*<div class="form-group col-md-2">
+                                    <label>Triển khai</label>
+                                    <select id="ddlChinhanh_" asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Điều hành</label>
+                                    <select id="ddlNguoidh_" asp-for="dieuhanh" asp-items="@ViewBag.dieuhanh" class="form-control select2" style="width:100%"></select>
+                                </div>*@
+                            @if (Convert.ToBoolean(Context.Session.GetString("Admin")) == true)
+                            {
+                                <div class="col-md-2">
+                                    <label class="control-label">Triển khai </label>
+                                    <select id="ddlChinhanh_" asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Điều hành </label>
+                                    <select id="ddlNguoidh_" asp-for="dieuhanh" asp-items="@ViewBag.dieuhanh" class="form-control select2" style="width:100%"></select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-2">
+                                    <label class="control-label">Triển khai </label>
+                                    <input asp-for="chinhanh" class="form-control" readonly />
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Điều hành </label>
+                                    <input asp-for="dieuhanh" class="form-control" readonly />
+                                </div>
+                            }
+                            <div class="form-group col-md-12">
+                                @if (Model.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("roleId") == "superadmin" || (Context.Session.GetString("chinhanh") == Model.chinhanh && Context.Session.GetString("Admin").ToString().ToLower() == "true"))
+                                {
+                                    <input type="button" class="btn btn-primary" id="btCapnhatCarTourProgTemp" value="Cập nhật" />
+                                }
+                                <button type="button" class="btn btn-default dong">Hủy</button>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

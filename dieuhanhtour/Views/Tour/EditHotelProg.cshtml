@@ -1,0 +1,265 @@
+﻿@model TourprogHotelViewModel
+
+
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+    $('#ddlChinhanh_').off('change').on('change', function () {
+
+        var chinhanh = $(this).val();
+        var url = "/Tour/getUserByChinhanh";
+
+        var ddlNguoidh_ = $('#ddlNguoidh_');
+        ddlNguoidh_.empty();
+
+        if (chinhanh != null && chinhanh != '') {
+            $.getJSON(url, { chinhanh: chinhanh }, function (nguoidhs) {
+                var result = JSON.parse(nguoidhs);
+                if (result != null && !jQuery.isEmptyObject(result)) {
+                    $.each(result, function (index, nguoidh) {
+
+                        ddlNguoidh_.append($('<option/>', {
+                            value: nguoidh.Username,
+                            text: nguoidh.Hoten
+                        })).trigger('change');
+                    });
+                }
+                else {
+                    ddlNguoidh_.empty();
+                };
+            });
+        }
+
+    });
+</script>
+
+<form id="frmEditHotelProgTemp">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="modal-title text-uppercase">Chi tiết về khách sạn / Cruises </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="Tourprog.Id" id="txtIdHotelProgTemp" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Khách lưu trú tại khách sạn / Cruises</legend>
+                            <div class="col-md-4">
+                                <label class="control-label">Diễn giải</label>
+                                @*<div class="col-md-5">*@
+                                <input type="text" class="form-control" asp-for="Tourprog.tour_item" />
+                            </div>
+                            <div class="col-md-4">
+                                @*</div>*@
+                                <label class="control-label">Khách sạn / Tàu</label>
+                                <select asp-for="Tourprog.supplierid" asp-items="@ViewBag.supplier" class="form-control select2" style="width:100%"></select>
+
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Số khách</label>
+                                <input class="form-control text-center" type="number" asp-for="Tourprog.pax" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Trẻ em</label>
+                                <input class="form-control text-center" type="number" asp-for="Tourprog.childern" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label">Ghi chú</label>
+                                <input type="text" class="form-control" asp-for="Tourprog.srvnode" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="control-label">Phòng nội bộ</label>
+                                <input type="text" class="form-control text-center numbers" asp-for="Tourprog.foc" />
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="control-label">Trạng thái</label>
+                                <select asp-for="Tourprog.status" asp-items="@ViewBag.status" class="form-control" style="width:100%"></select>
+                            </div>
+                           
+                            @if (Convert.ToBoolean(Context.Session.GetString("Admin")) == true)
+                            {
+                                <div class="col-md-2">
+                                    <label class="control-label">CN Triển khai </label>
+                                    <select id="ddlChinhanh_" asp-for="Tourprog.chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Điều hành </label>
+                                    <select id="ddlNguoidh_" asp-for="Tourprog.dieuhanh" asp-items="@ViewBag.dieuhanh" class="form-control select2" style="width:100%"></select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-2">
+                                    <label class="control-label">CN Triển khai </label>
+                                    <input asp-for="Tourprog.chinhanh" class="form-control" readonly />
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Điều hành </label>
+                                    <input asp-for="Tourprog.dieuhanh" class="form-control" readonly />
+                                </div>
+                            }
+                        </fieldset>
+                    </div>
+                    @*<div class="col-md-12" style="padding-top:5px;"> <hr style="border-color: #3E5C9A;" /> </div>*@
+
+
+                <div class="col-md-12">
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin về công nợ</legend>
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <label>Công nợ</label>
+                                <div class="checkbox text-center">
+                                    <input asp-for="Tourprog.debit" type="checkbox" class="minimal" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <label class="control-label">Nơi book</label>
+                                <select asp-for="Tourprog.srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="control-label">VAT vào</label>
+                                <input type="text" class="form-control text-center numbers" asp-for="Tourprog.vatin" />
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="control-label">VAT ra</label>
+                                <input type="text" class="form-control text-center numbers" asp-for="Tourprog.vatout" />
+                            </div>
+                            
+
+
+                        </div>
+                    </fieldset>
+                </div>
+
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về phòng và chi phí</legend>
+                            <input type="hidden" asp-for="Hotel.Id" />
+                            <div class="col-md-2">
+                                <label>Loại tiền</label>
+                                <select asp-for="Hotel.currency" asp-items="@ViewBag.ngoaite" class="form-control" style="width:100%"></select>
+                            </div>
+                            <div class="col-md-10">
+                                <label>Ghi chú / Loại phòng</label>
+                                <input asp-for="Hotel.note" class="form-control" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>SGL</label>
+                                <input asp-for="Hotel.sgl" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá SGL</label>
+                                <input type="text" asp-for="Hotel.sglcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>DBL</label>
+                                <input asp-for="Hotel.dbl" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input asp-for="Hotel.dblpax" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá DBL</label>
+                                <input type="text" asp-for="Hotel.dblcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>DBL EXT</label>
+                                <input asp-for="Hotel.extdbl" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá DBL EXT</label>
+                                <input type="text" asp-for="Hotel.extdblcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>TWN</label>
+                                <input asp-for="Hotel.twn" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input asp-for="Hotel.twnpax" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá TWN</label>
+                                <input type="text" asp-for="Hotel.twncost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>TWN EXT</label>
+                                <input asp-for="Hotel.exttwn" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá TWN EXT</label>
+                                <input type="text" asp-for="Hotel.exttwncost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>Home stay</label>
+                                <input type="text" asp-for="Hotel.homestay" class="form-control text-center numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input type="text" asp-for="Hotel.homestaypax" class="form-control text-center numbers" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá / khách</label>
+                                <input type="text" asp-for="Hotel.homestaycost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Ghi chú</label>
+                                <input type="text" asp-for="Hotel.homestaynote" class="form-control" />
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-2">
+                                <label>OTHER</label>
+                                <input asp-for="Hotel.oth" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Số khách</label>
+                                <input asp-for="Hotel.othpax" class="form-control text-center" />
+                            </div>
+                            <div class="col-md-2">
+                                <label>Giá OTHER</label>
+                                <input type="text" asp-for="Hotel.othcost" asp-format="{0:##,0}" class="form-control text-right numbers" />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Ghi chú OTHER</label>
+                                <input asp-for="Hotel.othtype" class="form-control" />
+                            </div>
+
+                        </fieldset>
+                    </div>
+
+                </div>
+
+                <div class="box-footer col-md-12">
+                    @if (Model.Tourprog.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("roleId") == "superadmin" || (Context.Session.GetString("chinhanh") == Model.Tourprog.chinhanh && Context.Session.GetString("Admin").ToString().ToLower() == "true"))
+                    {
+                        <input type="button" class="btn btn-primary" id="btCapnhatHotelProgTemp" value="Cập nhật" />
+                    }
+                    <button type="button" class="btn btn-default dong">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

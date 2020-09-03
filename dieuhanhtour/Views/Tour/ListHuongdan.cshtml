@@ -1,0 +1,165 @@
+﻿@model IEnumerable<Huongdan>
+<script src="~/Asset/js/Tour/HuongdanControl.js"></script>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+<script>
+    //$(document).ready(function () {
+    //        // lấy thông tin khoá tour trong Edit tour
+    //         var locktour = $("#txtLocktour").val();
+    //    });
+</script>
+<input id="utxtId" type="hidden" value="@ViewBag.sgtcode" />
+
+<div class="showYeucauhd" style="overflow-x:auto">
+    <table class="table mytable text-nowrap" id="tbHuongdan">
+        <thead>
+            <tr>
+                <th class="text-center" width="5%"><i class="fa fa-gear"></i></th>
+                <th>Triển khai</th>
+                <th>Ngày YC</th>
+                <th>Tên HD</th>
+                <th>Điện thoại</th>
+                <th>Ngoại ngữ</th>
+                <th>Bắt đầu</th>
+                <th>Tại</th>
+                <th>Kết thúc</th>
+                <th>Tại</th>
+                <th>Suốt tuyến</th>
+                <th>Ghi chú</th>
+                <th>Nội dung công việc</th>
+                <th>Loại tiền</th>
+                <th>Phí đón tiễn</th>
+                <th>Phí đi đoàn</th>
+                <th>Trả phí</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr id="row_@item.IdHuongdan">
+                <td class="text-center text-nowrap">
+                    <a class="ViewLogHD text-success" href="javascript:;" title="Xem log file" data-id="@item.IdHuongdan"><i class="fa fa-file-text"></i></a>                        |
+                    <a id=@Html.Raw("btnEditHd_"+item.IdHuongdan) href="javascript:;" title="Cập nhật yêu cầu hướng dẫn" data-id="@item.IdHuongdan" data-cn="@item.chinhanh" data-session="@ViewBag.cn"><i class="fa fa-edit"></i></a> |
+                    @if (Context.Session.GetString("Newtour") == "True")
+                    {
+                        <a id=@Html.Raw("btnDelHd_" + item.IdHuongdan) href="javascript:;" title="Xoá yêu cầu hướng dẫn" class="text-danger" data-cn="@item.chinhanh" data-session="@ViewBag.cn" data-id="@item.IdHuongdan"><i class=" fa fa fa-trash"></i></a>
+                    }
+                    else
+                    {
+                        <i class=" fa fa fa-trash"></i>
+                    }
+                </td>
+                <td class="text-center">
+                    @item.chinhanh
+                </td>
+                <td class="text-center">
+                    @Html.Raw(item.Ngayyeucau.ToString("dd/MM/yyyy"))
+                </td>
+                <td>
+                    @item.Tenhd
+                </td>
+                <td>
+                    @item.Dienthoai
+                </td>
+                <td>
+                    @item.Ngoaingu
+                </td>
+                <td>
+                    @Html.Raw(item.Batdau.HasValue ? item.Batdau.Value.ToString("dd/MM/yyyy") : "/ /")
+                </td>
+                <td>
+                    @item.Batdautai
+                </td>
+                <td>
+                    @Html.Raw(item.Ketthuc.HasValue ? item.Ketthuc.Value.ToString("dd/MM/yyyy") : "/ /")
+                </td>
+                <td>
+                    @item.Ketthuctai
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" class="minimal" checked="@item.Suottuyen" />
+                </td>
+                <td>
+                    @item.Ghichu
+                </td>
+                <td>
+                    @item.Ndcongviec
+                </td>
+                <td>
+                    @item.Loaitien
+                </td>
+                <td class="text-right">
+                    @Html.Raw(String.Format("{0:#,##0}", item.Phidontien))
+                </td>
+                <td class="text-right">
+                    @Html.Raw(string.Format("{0:#,##0}", item.Phididoan))
+                </td>
+                <td class="text-right">
+                    @Html.Raw(string.Format("{0:#,##0}", item.Traphi))
+                </td>
+
+                <td style="display:none">
+                    <script>
+                            $("table").on("click", "#btnEditHd_" +@item.IdHuongdan, function () {
+                                var cn = $(this).data('cn');
+                                var session = $(this).data('session')
+                                if (session != cn) {
+                                    alert("Bạn không có quyền cập nhật yêu cầu hướng dẫn này.")
+                                }
+                                else {
+                                    var id = $(this).data('id');
+                                    HuongdanControl.EditHuongdan(id);
+                                }
+                            });
+
+                            $("table").on("click", "#btnDelHd_" +@item.IdHuongdan, function () {
+                                if (locktour.length > 0) {
+                                     alert("Tour đã bị khoá, không thể xoá");
+                                    return;
+                                }
+                                else {
+                                    var id = $(this).data('id');
+                                    var cn = $(this).data('cn');
+                                    var session = $(this).data('session');
+                                    if (session != cn) {
+                                        alert("Bạn không có quyền xoá hướng dẫn này.")
+                                    }
+                                    else {
+
+                                        if (confirm("Xoá hướng dẫn này?")) {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Tour/DelHuongdan",
+                                                data: { id: id }
+                                            });
+                                            $('#row_' + id).remove();
+                                        }
+                                    }
+                                }
+                            });
+                    </script>
+                </td>
+            </tr>
+            }
+        </tbody>
+        @*@if (Context.Session.GetString("Newtour") == "True")
+        {*@
+            <tfoot class="tfoot" style="display:none;">
+                <tr>
+                    <td class="text-center">
+                        <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tfoot>
+        @* } *@
+        </table>
+</div>
+<div id="ModelYeucauhd">
+    <div class="Yeucauhd"></div>
+</div>
+
+<div id="ModalViewLogHd" class="modal fade in" role="dialog" style="display:none">
+    <div class="DetailLogHd"></div>
+</div>

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<dieuhanhtour.Data.Model.Thanhpho>
+
+<script src="~/Asset/js/Thanhpho/ThanhphoControl.js"></script>
+<div class="showThanhpho" style=" max-height:200px; overflow-x:auto">
+    <h3>Danh sách Thành phố / Thị xã thuộc @ViewBag.tentinh</h3>
+
+    <table class="table mytable text-nowrap" id="tbThanhpho">
+        <thead>
+            <tr>
+                <th style="width:100px;" class="text-center"><i class="fa fa-gear"></i></th>
+                <th style="width:150px;">
+                    Mã TP/ TX
+                </th>
+                <th>
+                    Tên thành phố / Thị xã
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width:100px;" class="text-center">
+                        <a id=@Html.Raw("btnEditTP" + @item.Matp) class="EditTP" href="javascript:;" data-matp="@item.Matp"><i class="fa fa-edit"></i></a> 
+                    </td>
+                    <td style="width:150px;" class="text-center">
+                        @item.Matp
+                    </td>
+                    <td>
+                        @item.Tentp
+                    </td>
+                    <td style="display:none">
+                        <script>
+                            $('#btnEditTP' +'@item.Matp').off('click').on('click', function () {
+                                var matp = $(this).data('matp');
+                                ThanhphoControl.EditThanhpho(matp);
+                            });
+                        </script>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-center">
+                    <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+
+

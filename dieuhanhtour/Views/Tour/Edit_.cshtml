@@ -1,0 +1,221 @@
+﻿@model Tourinf
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<section class="content-header">
+    <h1>
+        Cập nhật tour code @Model.sgtcode
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlTour")">Danh sách các tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <div class="box-header">
+                        <h3 class="box-title">
+                            @if (Context.Session.GetString("Booking") == "True")
+                            {
+                                <a asp-route-sgtcode="@Model.sgtcode" asp-action="Booking" class="btn btn-warning"><i class="fa fa-book"></i> Booking</a>
+                                <a asp-route-sgtcode="@Model.sgtcode" asp-action="ExportWord" class="btn btn-primary"><i class="fa fa-file-word-o"></i> In chương trình tour</a>
+                            }
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <form id="frmCreateTour" asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="sgtcode" id="utxtId" />
+                            <input type="hidden" asp-for="logfile" />
+                            <input type="hidden" asp-for="concernto" />
+                            <input type="hidden" asp-for="chinhanh" />
+                            <input type="hidden" asp-for="createtour" />
+                            <input type="hidden" asp-for="operators" id="txtOperator" />
+                            <input type="hidden" asp-for="locktour" id="txtLocktour" />
+                            <input type="hidden" value="@Context.Session.GetString("username")" id="txtSession" />
+                            @if (ViewBag.tourProgcount <= 0)
+                            {
+                                <div class="form-group col-md-3">
+                                    <label class="control-label">Tour Template</label>
+                                    <select asp-items="@ViewBag.tourtemp" name="codetemp" class="form-control select2" ></select>
+                                </div>
+                            }
+                            <div class="clearfix"></div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Hãng / Công ty</label>
+                                <select asp-items="@ViewBag.company" asp-for="companyId" class="form-control select2"></select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Loại tour</label>
+                                <select asp-items="@ViewBag.tourkind" asp-for="tourkindId" class="form-control " id="ddTourkind"></select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Visa</label>
+                                <select asp-items="@ViewBag.visa" asp-for="visa" class="form-control " id="ddTourkind"></select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label datepicker">Từ ngày</label>
+                                <input asp-for="arr" type="text" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" />
+                                <span asp-validation-for="arr" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Đến ngày</label>
+                                <input asp-for="dep" type="text" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" />
+                                <span asp-validation-for="dep" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">SK</label>
+                                <input asp-for="pax" class="form-control text-center" />
+                                <span asp-validation-for="pax" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Em bé</label>
+                                <input asp-for="childern" class="form-control text-center" />
+                                <span asp-validation-for="childern" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Lộ trình</label>
+                                <input asp-for="reference" class="form-control" id="txtReference" />
+                                <span asp-validation-for="reference" class="text-danger"></span>
+                            </div>
+                            @if (Convert.ToBoolean(Context.Session.GetString("Admin")) == true)
+                            {
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Phòng Điều hành</label>
+                                    <select id="ddlPhongdh" asp-items="@ViewBag.phongban" asp-for="departoperator" class="form-control select2" style="width:100%"></select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Người Điều hành</label>
+                                    <select id="ddlNguoidh" asp-items="@ViewBag.dieuhanh" asp-for="operators" class="form-control" style="width:100%"></select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Phòng Điều hành</label>
+                                    <select  asp-items="@ViewBag.phongban" asp-for="departoperator" class="form-control select2" style="width:100%" disabled></select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Người Điều hành</label>
+                                    <select  asp-items="@ViewBag.dieuhanh" asp-for="operators" class="form-control" style="width:100%" disabled></select>
+                                </div>
+                            }
+                            <div class="clearfix"></div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Tuyến</label>
+                                <select asp-items="@ViewBag.tuyentq" asp-for="routing" class="form-control select2" style="width:100%" id="ddRouting"></select>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Khách</label>
+                                <select asp-items="@ViewBag.passType" asp-for="passtypeId" class="form-control" style="width:100%"></select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Doanh thu</label>
+                                <input asp-for="revenue" class="form-control numbers text-right" asp-format="{0:#,##0.0}" />
+                                <span asp-validation-for="revenue" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Loại tiền</label>
+                                <select asp-items="@ViewBag.ngoaite" asp-for="currency" class="form-control select2" id="ddCurrency"></select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Tỷ giá</label>
+                                <input asp-for="rate" class="form-control numbers text-right" asp-format="{0:#,##0.0}" id="txtRate" />
+                                <span asp-validation-for="rate" class="text-danger"></span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-md-12">
+
+                                @*@if ((Model.chinhanh == Context.Session.GetString("chinhanh") && Context.Session.GetString("Admin").ToString().ToLower() == "true"))*@
+                                @if (Context.Session.GetString("chinhanh") == Model.chinhanh && Context.Session.GetString("Admin").ToString().ToLower() == "true" || Model.operators == Context.Session.GetString("username"))
+                                {
+                                    <input type="submit" value="Cập nhật" id="btEditTour" class="btn btn-primary" />
+                                }
+                                <a href="@Context.Session.GetString("urlTour")" class="btn btn-default">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <hr style="border-color: #3E5C9A;" />
+                </div>
+                @*tab pane*@
+                <div class="col-md-12">
+
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_cttour" class="cttour_" data-toggle="tab">Chương trình tour</a></li>
+                            <li><a href="#tab_ghichu" class="ghichu_" data-toggle="tab">Ghi chú</a></li>
+                            <li><a href="#tab_Dskhach" class="dskhach_" data-toggle="tab">Danh sách khách</a></li>
+                            <li><a href="#tab_chiphikhac" class="chiphikhac_" data-toggle="tab">Chi phí khác</a></li>
+                            <li><a href="#tab_ycxe" class="ycxe_" data-toggle="tab">Xe</a></li>
+                            <li><a href="#tab_huongdan" class="huongdan_" data-toggle="tab">Hướng dẫn</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_cttour">
+                                <div id="cttour">
+                                </div>
+                            </div>
+                            <!-- /.tab-pane 2 -->
+                            <div class="tab-pane" id="tab_ghichu">
+                                <div id="dsGhichu"></div>
+                            </div>
+                            <!-- /.tab-pane 2 -->
+                            <!-- /.tab-pane 3 -->
+                            <div class="tab-pane" id="tab_Dskhach">
+                                <div id="dsKhach"></div>
+                            </div>
+                            <!-- /.tab-pane 3 -->
+                            <!-- /.tab-pane 4 -->
+                            <div class="tab-pane" id="tab_chiphikhac">
+                                <div id="dsChiphikhac">chi phi khac</div>
+                            </div>
+                            <!-- /.tab-pane 4 -->
+                            <!-- /.tab-pane 5 -->
+                            <div class="tab-pane" id="tab_ycxe">
+                                <div id="dsYcxe"></div>
+                            </div>
+                            <!-- /.tab-pane 5 -->
+                            <!-- /.tab-pane 6 -->
+                            <div class="tab-pane" id="tab_huongdan">
+                                <div id="dsHuongdan"></div>
+                            </div>
+                            <!-- /.tab-pane 6 -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+
+@section Scripts {
+
+
+    <script src="~/Asset/js/Tour/TourControl.js"></script>
+    <script>
+        $(document).ready(function () {
+            var id = $('#utxtId').val();
+            $.ajax({
+                url: '/Tour/listTourProg',
+                data: { id: id },
+                type: 'GET',
+                success: function (data) {
+                    $('#cttour').html(data);
+                }
+            });
+        });
+
+    </script>
+
+}

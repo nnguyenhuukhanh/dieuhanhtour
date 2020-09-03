@@ -1,0 +1,158 @@
+﻿@model Booked
+@{
+    ViewData["Title"] = "Booking";
+
+}
+@{
+    var listSupplier = (List<SupplierByCode>)ViewBag.listSupplier;
+}
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@section Scripts {
+
+    <script src="~/Asset/js/Tour/BookedControl.js"></script>
+    <script>
+        function sendEmail() {
+            var sup = $('#txtSupplierId').val();
+            if (sup.length == 0) {
+                alert("Vui lòng chọn nhà cung cấp cần Email Booking");
+                return;
+            }
+            else {
+                var mailBody = "";// $("#txtLogfile").val();
+                var email =  $("#Email").html();
+                document.location = "mailto:" + email + "?subject=Booking&body=" + encodeURIComponent(mailBody);
+              //  $('#frmBooking').submit();
+            }
+        }
+    </script>
+}
+
+<section class="content-header">
+    <h1>
+        Booking form
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlTour")">Danh sách các tour</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlEditTour")">Cập nhật tour @ViewBag.sgtcode</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="box">
+        <div class="box-header">
+            <div class="col-md-12">
+                <h4 class="box-title text-uppercase">Tour code: @ViewBag.tour </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="box-body">           
+            <div class="row">
+                <div class="col-md-8" style="overflow:auto; max-height:150px; min-height:150px;">
+                    <table class="table-striped text-nowrap mytable" id="tbBooking">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="10%">Code</th>
+                                <th>Tên nhà cung ứng dịch vụ</th>
+                                <th>Người nhận</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in listSupplier)
+                                {
+                                    <tr data-code="@item.code" data-sgtcode="@item.sgtcode" data-name="@item.name" data-email="@item.email">
+                                        <td class="text-center">@item.code</td>
+                                        <td>@item.tengiaodich</td>
+                                        <td>@item.name</td>
+                                        <td>@item.email</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="col-md-12">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label"> Ngày booking</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control text-center datepicker" asp-for="Date" asp-format="{0:dd/MM/yyyy}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Booking lần thứ</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control text-center" id="txtTimes" asp-for="Times" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label"> Booking No.</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control text-center" id="txtBooking" asp-for="Booking" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-4 text-right">
+                            <form asp-action="Booking" method="post" id="frmBooking">
+                                <input type="hidden" asp-for="Supplierid" Id="txtSupplierId" />
+                                <input type="hidden" asp-for="Sgtcode" Id="txtSgtcode" />
+                                <input type="hidden" asp-for="Name" id="txtName" />
+                                <input type="hidden" id="txtLogfile" name="Logfile" />
+                                <button type="button" id="btSaveBooking" class="btn btn-warning"><i class="fa fa-save"></i></button>
+                                @*<button type="button" class="btn btn-warning" onclick="sendEmail();" title="Gửi Email booking"><i class="fa fa-envelope"></i></button>*@
+                                <a href="@Context.Session.GetString("urlEditTour")" class="btn btn-default"><i class="fa fa-undo"></i></a>
+                            </form>
+                        </div>
+                        <div class="col-md-8">
+                            @*<form id="frmWord" asp-action="ExportBookingToWord" asp-controller="Tour" method="get">*@
+                            <form id="frmWord" asp-action="ExportBookingToWord" asp-controller="Tour" method="get">
+                                <input type="hidden" asp-for="Supplierid" Id="txtSupplierId_" />
+                                <input type="hidden" asp-for="Sgtcode" Id="txtSgtcode" />
+                                <input type="hidden"  name="Note" Id="txtNote_" /> 
+                                <button type="button" id="btWord" class="btn btn-primary" title="Export thông tin booking to Word"><i class="fa fa-file-word-o"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label> Ghi chú về booking</label>
+                    <textarea class="form-control" rows="10" id="txtNote" asp-for="Note"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label> Quá trình booking</label>
+                    <textarea class="form-control" rows="10" id="txtProfile" asp-for="Profile" style="overflow:auto" disabled></textarea>
+                </div>
+            </div>
+            @*<div>
+                <textarea id="txtLogfile" class="form-control" rows="10" asp-for="Logfile" style="overflow:auto"></textarea>
+            </div>*@
+            <div id="Email" style="display:none;"></div>
+
+        </div>
+    </div>
+    @*</div>*@
+</section>
+
+
+

@@ -1,0 +1,305 @@
+﻿@model TourProgTemp
+
+
+
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script src="~/Asset/js/Tourtemplate/EditTourProgTempControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+</script>
+@{
+    var see = (List<SightseeingTempViewModel>)ViewBag.listsee;
+    var macn = Context.Session.GetString("chinhanh");
+}
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+
+<form id="frmEditSightseeingTemp">
+    <input id="hidId" type="hidden" asp-for="Id" />
+    <input id="hidCode" type="hidden" asp-for="Code" />
+    <input id="hidStt" type="hidden" asp-for="stt" />
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="modal-title text-uppercase">Chi tiết tuyến điểm tham quan </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="Id" id="txtIdSee" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin tuyến tham quan</legend>
+                           
+                               
+                                   
+                            <div class="col-md-6">
+                                <label> Tham quan</label>
+                                <select asp-for="tour_item" asp-items="@ViewBag.dtq" class="form-control select2" style="width:100%"></select>
+                            </div>                                                                                                                        
+                            <div class="col-md-6">
+                                <label>Ghi chú</label>
+                                <input type="text" class="form-control" asp-for="srvnode" />
+                            </div>
+                               
+                        </fieldset>
+                    </div>
+
+                    <div class="col-sm-12">
+
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Điểm tham quan của đoàn</legend>
+                            <div style="overflow-x:auto">
+                                <table class="table mytable text-nowrap " id="tbSeetmp">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="width:7%"><i class="fa fa-gear"></i></th>
+                                            <th style="width:200px;">Điểm tham quan a</th>
+                                            <th>Số serial</th>                                            
+                                            <th>Giá vé người lớn</th>
+                                            <th>Giá vé trẻ em</th>
+                                            <th>VAT vào</th>
+                                            <th>VAT ra</th>
+                                            <th>HTTT</th>
+                                            <th style="display:none;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in @see)
+                                        {
+                                            <tr id="rowseetemp_@item.SightseeingTemp.Id">
+                                                <td class="text-center" width="7%">
+                                                    <a id=@Html.Raw("btnEdit_"+item.SightseeingTemp.Id) class="Edit" data-id="@item.SightseeingTemp.Id" href="javascript:;"><i class=" fa fa-edit"></i></a>
+                                                    <a id=@Html.Raw("btnUpdate"+item.SightseeingTemp.Id) class="Update" data-id="@item.SightseeingTemp.Id" href="javascript:;" style="display:none"><i class="fa fa-save"></i></a>
+                                                    <a class="Cancel text-danger" href="javascript:;" style="display:none"><i class="fa fa-close"></i></a>
+                                                    <a class="Delete text-danger" data-id="@item.SightseeingTemp.Id" href="javascript:;"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                                <td class="Id" style="display:none"><span>@item.SightseeingTemp.Id</span></td>
+                                                <td class="codedtq" style="width:100px;">
+                                                    <span>@item.Diemtq</span>
+                                                    <select id=@Html.Raw("dleditdtq_"+item.SightseeingTemp.Id) asp-for="@item.SightseeingTemp.Codedtq" asp-items="@ViewBag.dtq" class="form-control select2" style="width:100%;"></select>
+                                                </td>
+                                                <td class="serial">
+                                                    <span>@item.SightseeingTemp.Serial</span>
+                                                    <input id="txtserial" type="text" class="form-control  input-sm" asp-for="@item.SightseeingTemp.Serial" style="display:none; " />
+                                                </td>
+                                               
+                                                <td class="text-right paxprice">
+                                                    <span> @string.Format("{0:#,##0.0}", @item.SightseeingTemp.PaxPrice)</span>
+                                                    <input id="txtPaxprice" type="text" asp-format="{0:##0,#.0}" class="form-control text-right numbers  input-sm" asp-for="@item.SightseeingTemp.PaxPrice" style="display:none;" />
+                                                </td>
+
+                                                <td class="text-right childernprice">
+                                                    <span>@string.Format("{0:#,##0.0}", @item.SightseeingTemp.ChildernPrice)</span>
+                                                    <input type="text" id="txtChildernprice" asp-format="{0:##0,#.0}" class="form-control text-right numbers  input-sm" asp-for="@item.SightseeingTemp.ChildernPrice" style="display:none;" />
+                                                </td>
+
+                                                <td class="vatin text-center">
+                                                    <span>@item.SightseeingTemp.Vatin</span>
+                                                    <input type="text" id="txtvatin" class="form-control text-center input-sm" asp-for="@item.SightseeingTemp.Vatin" style="display:none;" />
+                                                </td>
+
+                                                <td class="text-center vatout">
+                                                    <span> @item.SightseeingTemp.Vatout</span>
+                                                    <input type="text" id="txtvatout" class="form-control text-center numbers  input-sm" asp-for="@item.SightseeingTemp.Vatout" style="display:none;" />
+                                                </td>
+                                                <td class=" httt">
+                                                    <span> @item.SightseeingTemp.httt</span>
+                                                    <select id=@Html.Raw("dledithttt_"+item.SightseeingTemp.Id) asp-for="@item.SightseeingTemp.httt" asp-items="@ViewBag.httt" class="form-control input-sm select2" style="display:none; width:100px;"></select>
+
+                                                </td>
+
+                                                <td style="display:none;">
+                                                    <script>
+
+
+                                               $("table").on("click", "#btnUpdate" +@item.SightseeingTemp.Id, function () {
+
+                                                var btn = $(this);
+                                                var idsee = btn.data("id");
+
+                                                   var row = btn.closest("tr");
+
+                                                    $("td", row).each(function () {
+                                                        if ($(this).find("input").length > 0) {
+
+                                                            var input = $(this).find('input');
+                                                            var span = $(this).find('span');
+                                                            span.show();
+                                                            input.hide();
+                                                            span.html(input.val());
+                                                        }
+
+                                                        if ($(this).find(".select2").length > 0) {
+                                                            debugger
+                                                            var span = $(this).find('span');
+                                                            span.show();
+                                                            span.html($(this).find(".select2").select2().val());
+                                                            $(this).find(".select2").select2().next().hide();
+                                                        }
+
+                                                    });
+                                                       row.find(".Edit").show();
+                                                       btn.hide();
+                                                        row.find(".Cancel").hide();
+                                                        row.find(".Delete").show();
+                                                       var seetemp = {};
+                                                           seetemp.Id = row.find(".Id").find("span").html();
+                                                            seetemp.Code = $("#hidCode").val();
+                                                            seetemp.stt = $("#hidStt").val();
+                                                           seetemp.Codedtq = row.find(".codedtq").find('span').html();// $("#dleditdtq").val();
+                                                           seetemp.Serial = row.find(".serial").find('span').html();// $("#txtserial").val();                                                        
+                                                            seetemp.PaxPrice = row.find(".paxprice").find('span').html();// $("#txtUnipricev").val();
+                                                            seetemp.ChildernPrice = row.find(".childernprice").find('span').html();//$("#txtunitprice").val();
+                                                           seetemp.Vatin = row.find(".vatin").find('span').html();// $("#txtvatin").val();
+                                                           seetemp.Vatout = row.find(".vatout").find('span').html();// $("#txtvatout").val();
+                                                            seetemp.httt = row.find(".httt").find('span').html();
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "/TourTemplate/EditSeetemp",
+                                                                data: { entity: seetemp },
+                                                                success: function () {
+                                                                    var id = $('#txtIdSee').val();//Id Tourprogtemp
+                                                                    EditTourProgTempControl.EditSightseeingTemp(id);//hien lai chi tiet dich vu tham quan
+
+                                                                }
+                                                            });
+
+                                                });
+
+                                                    </script>
+
+                                                </td>
+
+
+                                            </tr>
+
+
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="text-center" width="7%">
+                                                <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                                                <a class="fSeeTempUpdate" href="javascript:;" style="display:none"><i class="fa fa-save"></i></a>
+                                                <a class="fSeeCancel text-danger" href="javascript:;" style="display:none"><i class="fa fa-close"></i></a>
+                                            </td>
+
+                                            <td class="code" style="display:none"><input type="text" class="txtcode" value="@ViewBag.Code" />  </td>
+                                            <td class="stt" style="display:none"><input type="text" class="txtstt" value="@ViewBag.stt" />  </td>
+
+                                            <td class="diemtq">
+                                                <select id="dldtqadd" asp-items="@ViewBag.dtq" class="form-control select2 input-sm" style="width:200px;"></select>
+                                            </td>
+                                            <td class="serial">
+                                                <input type="text" class="form-control txtserial input-sm" style="display:none;" />
+                                            </td>
+                                           
+                                            <td class="text-right paxprice">
+                                                <input type="text" class="form-control txtPaxprice numbers text-right input-sm" style="display:none;" />
+                                            </td>
+
+                                            <td class="text-right childernprice">
+                                                <input type="text" class="form-control txtChildernprice numbers text-right input-sm" style="display:none;" />
+                                            </td>
+
+                                            <td class="vatin">
+                                                <input type="text" class="form-control txtvatin numbers text-center input-sm" style="display:none;" />
+                                            </td>
+                                            <td class="vatout">
+                                                <input type="text" class="form-control txtvatout numbers text-center input-sm" style="display:none;" />
+                                            </td>
+
+                                            <td class="httt">
+                                                <select id="dlhtttadd" asp-items="@ViewBag.httt" class="form-control select2 input-sm" style="width:100%;"></select>
+                                            </td>
+
+                                        </tr>
+
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </fieldset>
+
+
+
+                    </div>
+
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về công nợ</legend>
+                            <div class="form-horizontal">
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input asp-for="debit" class="minimal" /><span class="text-bold"> &nbsp; Công nợ</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="col-md-1 control-label">Nơi book</label>
+                                <div class="col-md-5">
+                                    <select asp-for="srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                                </div>
+                                <label class="col-md-1 control-label">VAT vào</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatin" />
+                                </div>
+                                <label class="col-md-1 control-label">VAT ra</label>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatout" />
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </fieldset>
+                    </div>
+
+                    <div class="box-footer col-md-12">
+                        <input type="button" class="btn btn-primary" id="btThemSightseeingTemp" value="Cập nhật" />
+                        <button class="btn btn-default dong">Hủy</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+
+        var dl = $('.codedtq').find('.select2');
+        dl.hide();
+
+        var dldebit = $('.editdebit').find('.select2');
+        dldebit.hide();
+
+        var dladddiemtq = $('.diemtq').find('.select2');
+        dladddiemtq.hide();
+
+        var dladddebit = $('.debit').find('.select2');
+        dladddebit.hide();
+
+        var dlhtttedit = $('.httt').find('.select2');
+        dlhtttedit.hide();
+    });
+
+
+
+
+
+</script>

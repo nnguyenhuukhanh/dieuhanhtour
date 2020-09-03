@@ -1,0 +1,195 @@
+﻿@model IEnumerable<TourProgTemp>
+@*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
+
+<style>
+
+
+    #bodydv {
+        list-style-type: none;
+    }
+
+        #bodydv tr.hovered {
+            background: silver;
+        }
+
+    .bodydv tr {
+        margin: 5px;
+        padding: 5px;
+        width: 800px;
+        border: 1px solid #ccc;
+        background-color: #ddf;
+    }
+
+
+
+
+    /*quy dinh style khi dragging*/
+    #bodydv tr.ui-draggable-dragging {
+        -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+        -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+        box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+    }
+</style>
+
+<div class="showcttour" style="overflow-x:auto">
+    <table class="table mytable text-nowrap" id="tbTourProgTemp">
+        <thead>
+            <tr>
+                <th class="text-center" width="5%"><i class="fa fa-gear"></i></th>
+                <th class="text-center" width="5%">STT</th>
+                <th class="text-center" width="5%">Ngày</th>
+                <th class="text-center" width="5%">Giờ</th>
+                <th class="text-center" width="5%">Dịch vụ</th>
+                <th class="text-center" width="5%">Loại tiền</th>
+                <th>Chương trình</th>
+                <th>Ghi chú</th>
+            </tr>
+        </thead>
+        <tbody id="bodydv">
+            @foreach (var item in Model)
+            {
+                <tr id="row_@item.Id" stt="@item.stt" cotid="@item.Code" ngay="@item.date" nguoitao="@ViewBag.nguoitao" class="ui-state-default">
+                    <td class="text-center">
+                        @if (Context.Session.GetString("Admin").ToString().ToLower() == "true" || Context.Session.GetString("roleId").ToString().ToLower() == "superadmin")
+                        {
+                            <a class="EditProgTemp" href="javascript:;" data-id="@item.Id" data-srvtyp="@item.srvtype"><i class="fa fa-edit"></i></a><span> | </span>
+                            <a class="text-danger DelTourProgTemp" data-id="@item.Id" data-srvtype="@item.srvtype"><i class="fa fa-trash"></i></a>
+                        }
+                        else
+                        {
+                            <i class="fa fa-edit"></i><span> | </span>
+                            <i class="fa fa-trash"></i>
+                        }
+                    </td>
+                    <td class="text-center">@item.stt</td>
+                    <td class="text-center">@item.date</td>
+                    <td class="text-center">@item.time</td>
+                    <td class="text-center">@item.srvtype</td>
+                    <td class="text-center">@item.currency</td>
+                    <td>
+                        @item.tour_item
+                    </td>
+                    <td>@item.srvnode</td>
+                </tr>
+            }
+        </tbody>
+        @if (ViewBag.nguoitao == Context.Session.GetString("username"))
+        {
+            <tfoot>
+                <tr>
+                    <td class="text-center">
+                        <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tfoot>
+        }
+    </table>
+</div>
+<div id="ModalTourProgTemp" style="display:none">
+    <div class="TourProgTemp"></div>
+</div>
+@*<script src="~/AdminLTE/plugins/jquery/js/bootbox.min.js"></script>*@
+<script src="~/Asset/js/Tourtemplate/EditTourProgTempControl.js"></script>
+
+<script>
+
+    function updateVitri(event, ui) {
+
+        var stt = null;
+        var nguoitao = ""; ngay = 0;
+        if (ui.item[0].attributes["stt"] != null) {
+            stt = ui.item[0].attributes["stt"].value;
+        }
+        if (ui.item[0].attributes["nguoitao"] != null) {
+            stt = ui.item[0].attributes["nguoitao"].value;
+        }
+        var Code = "0";
+         //Code
+        if (ui.item[0].attributes["cotid"] != null) {
+            Code = ui.item[0].attributes["cotid"].value;
+        }
+        //ngay
+        if (ui.item[0].attributes["ngay"] != null) {
+            ngay = ui.item[0].attributes["ngay"].value;
+        }
+        //alert(id + '------' + stt);
+
+        var sortedIDs = $("#bodydv").sortable("toArray");
+        if (nguoitao == '@Context.Session.GetString("username")' || ngay==0) {
+            if (confirm('Bạn muốn thay đổi vị trí dịch vụ này?')) {
+                capnhatstt(sortedIDs, Code);
+            }
+            else {
+                location.reload();
+            }
+        }
+        else {
+            alert('Bạn không có thể thay đổi vị trí dịch vụ này.');
+            location.reload();
+        }
+
+    }
+
+    function capnhatstt(sortedIDs, Code) {
+
+
+        var vurl = '@Url.Action("CapNhatSTT", "TourTemplate")';
+
+             return $.ajax({
+                 contentType: 'application/json; charset=utf-8',
+                 dataType: 'json',
+                 type: 'POST',
+                 url: vurl,
+                 data: JSON.stringify(sortedIDs),
+                 success: function (result) {
+                     if (result != "ERR") {
+                         //listdichvu(idtour);//load lai danh sach dich vu
+                         location.reload();
+                     } else {
+                         alert('Có lỗi, thông báo với quản lý!')
+                     }
+                 },
+                 error: function (xhr, ajaxOptions, thrownError) {
+                     if (xhr.status == "200") {
+                         location.reload();
+                        // listdichvu(idtour);//load lai danh sach dich vu
+                     } else {
+                         alert(xhr.status);
+                     }
+                 }
+             });
+
+
+    }
+
+    function handleMauDVDrop(event, ui) {
+       // alert('da tha');
+        $(this).addClass('correct');
+        $(this).addClass("ui-state-highlight");
+    }
+
+    $(function () {
+
+        $("#bodydv").sortable({
+            revert: true,
+            update: updateVitri
+        });
+
+
+        $("#bodydv tr").droppable({
+            classes: {
+                "ui-droppable-hover": "ui-state-hover"
+            },
+            //accept: '.theli',
+            hoverClass: 'hovered',
+            drop: handleMauDVDrop
+        });
+
+
+
+
+    });
+
+
+</script>

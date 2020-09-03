@@ -1,0 +1,26 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header bg-gray">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="modal-title"><strong>THÔNG BÁO</strong></div>
+        </div>
+
+        <div class="modal-body form-group-sm">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 form-group-sm">
+                    @* Bạn không có quyền truy cập hoặc thay đổi thông tin này.*@
+                    @TempData["thongbao"]
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>
+        </div>
+    </div>
+</div>
+

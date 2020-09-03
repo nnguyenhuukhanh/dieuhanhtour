@@ -1,0 +1,28 @@
+﻿@model Tourprog
+    <script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+@{
+    Layout = null;
+}
+<form id="frmXoadichvu" asp-action="DelTourProg" method="post" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header alert bg-gray">               
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-title">Huỷ dịch vụ @Model.sgtcode</div>
+            </div>
+            <div class="modal-body">
+
+                <input asp-for="Id" type="hidden" />
+                <textarea asp-for="lydohuydv" class="form-control" rows="3" placeholder="Vui lòng nhập lý do huỷ dịch vụ"></textarea>
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary"  value="Đồng ý" />
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Huỷ</button>
+            </div>
+
+        </div>
+    </div>
+</form>

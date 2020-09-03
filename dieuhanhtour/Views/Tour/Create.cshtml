@@ -1,0 +1,121 @@
+﻿@model CreateTourModel
+
+@{
+    ViewData["Title"] = "Thêm tour";
+}
+@section Scripts{
+    <script src="~/Asset/js/Tour/TourControl.js"></script>
+
+}
+<style>
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
+<section class="content-header">
+    <h1>
+        Tạo tour
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlTour")">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <form id="frmCreateTour" asp-controller="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @*<div class="form-group col-md-2">
+            <label class="control-label">SGT Code</label>
+            <input type="text" class="form-control" asp-for="sgtcode" readonly />
+        </div>*@
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Hãng</label>
+                        <select asp-for="macode" asp-items="@ViewBag.code" class="form-control"></select>
+                    </div>
+                    <div class="form-group col-md-3" style="display:none">
+                        <label class="control-label">Tour Template</label>
+                        <select asp-items="@ViewBag.tourtemp" asp-for="codetemp" class="form-control select2" id="ddTourtemp"></select>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label class="control-label"> Công ty</label>
+                        <select asp-items="@ViewBag.company" asp-for="companyId" class="form-control select2"></select>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label class="control-label">Tên tour / Tour serial</label>
+                        <input asp-for="reference" class="form-control" id="txtReference" />
+                        <span asp-validation-for="reference" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-2" style="display:none;">
+                        <label class="control-label">Visa</label>
+                        <select asp-items="@ViewBag.visa" asp-for="visa" class="form-control " id="ddTourkind" style="width: 100%"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label datepicker">Từ ngày<span class="text-danger">(*)</span></label>
+                        <input asp-for="arr" type="text" class="form-control datepicker" />
+                        <span asp-validation-for="arr" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Đến ngày<span class="text-danger">(*)</span></label>
+                        <input asp-for="dep" type="text" class="form-control datepicker" />
+                        <span asp-validation-for="dep" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Tổng số khách</label>
+                        <input asp-for="pax" class="form-control text-center" />
+                        <span asp-validation-for="pax" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label"> Số trẻ em</label>
+                        <input asp-for="childern" class="form-control text-center" />
+                        <span asp-validation-for="childern" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Loại tour</label>
+                        <select asp-items="@ViewBag.tourkind" asp-for="tourkindId" class="form-control " id="ddTourkind"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Khách</label>
+                        <select asp-items="@ViewBag.passType" asp-for="passtype" class="form-control" style="width:100%"></select>
+                    </div>
+
+                    <div class="form-group col-md-6" style="display:none;">
+                        <label class="control-label">Tuyến</label>
+                        <select asp-items="@ViewBag.tuyentq" asp-for="routing" class="form-control select2" style="width:100%" id="ddRouting"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Doanh thu</label>
+                        <input asp-for="revenue" class="form-control numbers text-right" />
+                        <span asp-validation-for="revenue" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Loại tiền</label>
+                        <select asp-items="@ViewBag.ngoaite" asp-for="currency" class="form-control" style="width:100%" id="ddCurrency"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Tỷ giá</label>
+                        <input asp-for="rate" class="form-control numbers text-right" id="txtRate" />
+                        <span asp-validation-for="rate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Triển khai</label>
+                        <select asp-items="@ViewBag.chinhanh" asp-for="chinhanh" class="form-control" style="width:100%"></select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Phòng</label>
+                        <select asp-items="@ViewBag.phongban" asp-for="departoperator" class="form-control" style="width:100%"></select>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-12">
+                        <input type="submit" value="Tạo tour" id="btCreateTour" class="btn btn-primary" />
+                        <a href="@Context.Session.GetString("urlTour")" class="btn btn-default">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

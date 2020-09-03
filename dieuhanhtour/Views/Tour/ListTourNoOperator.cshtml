@@ -1,0 +1,197 @@
+﻿@model IPagedList<Tourinf>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+@using X.PagedList
+
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@section Scripts{
+    <script src="~/Asset/js/Tour/TourControl.js"></script>
+}
+@{
+    ViewData["Title"] = "Tour chưa phân điều hành";
+}
+
+<section class="content-header">
+    <h1>
+        Danh sách tour chưa phân điều hành
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index">Danh sách tour</a></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <h4>
+                        <i class="fa fa-list-ol fa-lg text-primary"></i>
+                    </h4>
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="table table-striped text-nowrap mytable">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><i class="fa fa-gear"></i></th>
+                                <th class="text-center">CN</th>
+                                <th>
+                                    Code
+                                </th>
+                                <th>
+                                    SGT code
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Em bé
+                                </th>
+                                <th>
+                                    Ngày đến
+                                </th>
+                                <th>
+                                    Ngày đi
+                                </th>
+                                <th>Loại</th>
+                                <th>
+                                    Lộ trình
+                                </th>
+                                <th>
+                                    Người tạo tour/ Sales
+                                </th>
+                                <th>Điều hành</th>
+                                <th>Phòng Điều hành</th>
+                                <th>
+                                    Lộ trình
+                                </th>
+                                <th>
+                                    Ngày huỷ
+                                </th>
+                                <th>
+                                    Đóng tour
+                                </th>
+                                <th>Loại tiền</th>
+                                <th>Tỷ giá</th>
+                                <th>Doanh thu</th>
+                                <th>Khách</th>
+
+                                <th>Ngày tạo</th>
+                                <th>Lý do huỷ tour</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr class="selected" data-id="@item.sgtcode" data-dongtour="@item.locktour" data-cancel="@item.cancel">
+                                <td>
+                                    <a href="javascript:;" data-code="@item.sgtcode" title="Xem log file" class="ViewLogTour text-success"><i class="fa fa-file-text"></i></a> |
+                                    <a asp-action="Edit" asp-route-id="@item.sgtcode" data-cancel="@item.cancel" title="Cập nhật tour"><i class="fa fa-edit"></i></a> |
+                                    @if (item.chinhanh != ViewBag.chinhanh)
+                                    {
+                                        <i class="fa fa-trash-o" title="Không được phép huỷ tour này"></i><span> | </span>
+                                        @if (item.locktour.HasValue)
+                                        {
+                                            <i class="fa fa-unlock" title="Không được phép mở tour này"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-lock" title="Không được phép đóng tour này"></i>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @if (item.cancel.HasValue)
+                                        {
+                                            <a href="javascript:;" title="Phục hồi tour" class="Huytour text-danger" data-id="@item.sgtcode" data-cn="@item.chinhanh" data-cancel="@item.cancel" data-session="@ViewBag.chinhanh"><i class="fa fa-trash-o"></i></a> <span> | </span>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:;" title="Huỷ tour" class="Huytour text-danger" data-id="@item.sgtcode" data-cn="@item.chinhanh" data-cancel="@item.cancel" data-session="@ViewBag.chinhanh"><i class="fa fa-trash"></i></a> <span> | </span>
+                                        }
+
+
+                                        @if (item.locktour.HasValue)
+                                        {
+                                            <a href="javascript:;" title="mở tour" class=" dongtour text-warning" data-id="@item.sgtcode" data-locktour="@item.locktour" data-cancel="@item.cancel"><i class="fa fa-unlock"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:;" title="Lock tour" class="dongtour text-warning" data-id="@item.sgtcode" data-locktour="@item.locktour" data-cancel="@item.cancel"><i class="fa fa-lock"></i></a>
+                                        }
+                                    }
+                                </td>
+                                <td class="text-center">@item.chinhanh</td>
+                                <td class="text-center">
+                                    @item.companyId
+                                </td>
+                                <td class="text-center">@item.sgtcode</td>
+                                <td class="text-center">
+                                    @item.pax
+                                </td>
+                                <td class="text-center">
+                                    @item.childern
+                                </td>
+                                <td class="text-center">
+                                    @item.arr.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="text-center">
+                                    @item.dep.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="text-center">
+                                    @item.tourkindId
+                                </td>
+                                <td>
+                                    @item.reference
+                                </td>
+                                <td>
+                                    @item.concernto
+                                </td>
+                                <td>@item.operators</td>
+                                <td>@item.departoperator</td>
+
+                                <td>
+                                    @item.routing
+                                </td>
+                                <td>
+                                    @Html.Raw(item.cancel.HasValue ? item.cancel.Value.ToString("dd/MM/yyyy") : " / /  ")
+                                </td>
+                                <td>
+                                    @Html.Raw(item.locktour.HasValue ? item.locktour.Value.ToString("dd/MM/yyyy") : " / /  ")
+                                </td>
+                                <td class="text-center">@item.currency</td>
+                                <td class="text-right">@String.Format("{0:#,##0.0}", item.rate)</td>
+                                <td class="text-right">@String.Format("{0:#,##0.0}", item.revenue)</td>
+                                <td>@item.passtypeId</td>
+
+                                <td>@Html.Raw(item.createtour.HasValue ? item.createtour.Value.ToString("dd/MM/yyyy") : " / /  ")</td>
+                                <td>@item.cancelnote</td>
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager((IPagedList)ViewBag.tourinf, page => Url.Action("ListTourNoOperator", new { page , chinhanh = ViewBag.chinhanh }),
+                 PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions
+                      {
+                          LiElementClasses = new string[] { "page-item" },
+                 PageClasses = new string[] { "page-link" },
+                          MaximumPageNumbersToDisplay = 5,
+                          UlElementClasses = new[] { "pagination" },
+                 ContainerDivClasses = new[] { "pagination-container" }
+                      }, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

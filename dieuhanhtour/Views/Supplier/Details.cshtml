@@ -1,0 +1,114 @@
+﻿@model dieuhanhtour.Data.Model.Supplier
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Supplier</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Codecn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Codecn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tengiaodich)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tengiaodich)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tenthuongmai)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tenthuongmai)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Thanhpho)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Thanhpho)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Quocgia)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Quocgia)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Diachi)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Diachi)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Dienthoai)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Dienthoai)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Fax)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fax)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Masothue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Masothue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nganhnghe)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nganhnghe)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nguoilienhe)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nguoilienhe)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Website)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Website)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Trangthai)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Trangthai)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Ngaytao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Ngaytao)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nguoitao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nguoitao)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Code">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

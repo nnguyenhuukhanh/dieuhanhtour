@@ -1,0 +1,27 @@
+﻿@model Tourinf
+<script src="~/Asset/js/Tour/TourControl.js"></script>
+
+@{
+    Layout = null;
+}
+<form id="frmHuytour" asp-action="Delete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-gray">               
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="modal-title">@ViewBag.title @Model.sgtcode</div>
+            </div>
+            <div class="modal-body">
+
+                <input asp-for="sgtcode" type="hidden" />
+                <textarea asp-for="cancelnote" class="form-control" rows="3" placeholder="@ViewBag.cancelnote"></textarea>
+
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" id="btHuytour" value="Đồng ý" />
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Huỷ</button>
+            </div>
+
+        </div>
+    </div>
+</form>

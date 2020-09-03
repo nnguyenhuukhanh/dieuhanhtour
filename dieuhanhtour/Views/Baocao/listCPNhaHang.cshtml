@@ -1,0 +1,584 @@
+﻿@model IEnumerable<CPNhaHangViewModel>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Chi phí nhà hàng";
+}
+
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/CPNhaHangControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Báo cáo chi phí nhà hàng
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form id="frmCPNhaHang">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+
+                            <br />
+                            <div class="col-md-2">
+                                <span class="btn-group">
+                                    <button type="submit" formaction="/Baocao/listCPNhaHang" formmethod="get" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="submit" formaction="/Baocao/listCPNhaHangToExcel" formmethod="post" class="btn btn-success" title="Export to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="mytable text-nowrap">                    
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="text-center">STT</th>
+                                <th rowspan="2" class="text-center">
+                                    Tên nhà hàng
+                                </th>
+                                <th colspan="3" class="text-center">
+                                    Ăn sáng
+                                </th>
+                                <th colspan="3" class="text-center">
+                                    Ăn trưa
+                                </th>
+                                <th colspan="3" class="text-center">
+                                    Ăn tối
+                                </th>
+                                <th colspan="3" class="text-center">
+                                    Tổng cộng
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Khách</th>
+                                <th class="text-center">
+                                    CP VNĐ
+                                </th>
+                                <th class="text-center">
+                                    CP USD
+                                </th>
+                                <th class="text-center">Khách</th>
+                                <th class="text-center">
+                                    CP VNĐ
+                                </th>
+                                <th class="text-center">
+                                    CP USD
+                                </th>
+                                <th class="text-center">Khách</th>
+                                <th class="text-center">
+                                    CP VNĐ
+                                </th>
+                                <th class="text-center">
+                                    CP USD
+                                </th>
+                                <th class="text-center">Khách</th>
+                                <th class="text-center">
+                                    CP VNĐ
+                                </th>
+                                <th class="text-center">
+                                    CP USD
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyval">
+                            @{
+                                if (ViewBag.count > 0)
+                                {
+                                    //lay ra ten thanh pho
+                                    List<string> lstTenTP = Model.Select(x => x.thanhpho).Distinct().ToList();
+
+
+                                    foreach (string ten in lstTenTP)
+                                    {
+                                        int iSttks = 0;
+                                        List<CPNhaHangViewModel> lstTp = Model.Where(x => x.thanhpho == ten).AsEnumerable().ToList();
+
+                                        int iTongsk = 0;
+                                        decimal dTongvnd = 0, dTongusd = 0;
+                                        decimal[] adTotalCp = new decimal[2];//an sang
+                                        int[] aiTotalPax = new int[1];
+
+                                        decimal[] adTotalCpLUN = new decimal[2];//an trua
+                                        int[] aiTotalPaxLUN = new int[1];
+
+                                        decimal[] adTotalCpDIN = new decimal[2];//an toi
+                                        int[] aiTotalPaxDIN = new int[1];
+
+                                        decimal[] adTotalColCp = new decimal[2];//cho 3 cot tong
+                                        int[] aiTotalColPax = new int[1];
+                                        //tinh tong
+                                        foreach (var itemtp in lstTp)
+                                        {
+                                            iTongsk = iTongsk + itemtp.pax;
+                                            dTongvnd = dTongvnd + itemtp.cpvnd;
+                                            dTongusd = dTongusd + itemtp.cpusd;
+
+                                            adTotalColCp[0] = adTotalColCp[0] + dTongvnd;
+                                            adTotalColCp[1] = adTotalColCp[1] + dTongusd;
+                                            aiTotalColPax[0] = aiTotalColPax[0] + iTongsk;
+
+                                            @*An Sang*@
+
+
+                                            @if (itemtp.srvtype == "BRK")
+                                            {
+                                                @if (@itemtp.pax == 0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    aiTotalPax[0] = aiTotalPax[0] + iTongsk;
+
+                                                }
+
+                                                @if (@itemtp.cpvnd == 0)
+                                                {
+                                                }
+                                                else
+                                                {
+                                                    adTotalCp[0] = adTotalCp[0] + dTongvnd;
+
+                                                }
+
+                                                @if (@itemtp.cpusd == 0)
+                                                {
+                                                }
+                                                else
+                                                {
+                                                    adTotalCp[1] = adTotalCp[1] + dTongusd;
+                                                }
+
+                                            }
+
+                                            @*An Trua*@
+
+                                            else if (itemtp.srvtype == "LUN")
+                                            {
+
+                                                @if (@itemtp.pax == 0)
+                                                {
+                                                }
+                                                else
+                                                {
+                                                    aiTotalPaxLUN[0] = aiTotalPaxLUN[0] + iTongsk;
+                                                }
+
+                                                @if (@itemtp.cpvnd == 0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    adTotalCpLUN[0] = adTotalCpLUN[0] + dTongvnd;
+                                                }
+
+                                                @if (@itemtp.cpusd == 0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    adTotalCpLUN[1] = adTotalCpLUN[1] + dTongusd;
+                                                }
+                                            }
+
+                                            @*An Toi*@
+
+                                            else if (itemtp.srvtype == "DIN")
+                                            {
+                                                @if (@itemtp.pax == 0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    aiTotalPaxDIN[0] = aiTotalPaxDIN[0] + iTongsk;
+
+                                                }
+
+                                                @if (@itemtp.cpvnd == 0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    adTotalCpDIN[0] = adTotalCpDIN[0] + dTongvnd;
+
+                                                }
+
+                                                @if (@itemtp.cpusd == 0)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    adTotalCpDIN[1] = adTotalCpDIN[1] + dTongusd;
+
+                                                }
+                                            }
+
+                                            //reset
+                                            iTongsk = 0;
+                                            dTongvnd = 0;
+                                            dTongusd = 0;
+                                        }
+                                        //het tinh hien dong tong len
+                                        //dong tong
+                                        <tr>
+                                            <td class="text-center" style="width:20px;"></td>
+                                            <td class="text-bold">@ten</td>
+
+                                            @*An Sang*@
+
+                                            @if (aiTotalPax[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@aiTotalPax[0]</td>
+
+                                            }
+
+                                            @if (adTotalCp[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalCp[0]))</td>
+                                            }
+
+                                            @if (adTotalCp[1] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalCp[1]))</td>
+                                            }
+
+
+                                            @*An Trua*@
+
+
+                                            @if (aiTotalPaxLUN[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@aiTotalPaxLUN[0]</td>
+
+                                            }
+
+                                            @if (adTotalCpLUN[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalCpLUN[0]))</td>
+                                            }
+
+                                            @if (adTotalCpLUN[1] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalCpLUN[1]))</td>
+                                            }
+
+
+                                            @*An Toi*@
+
+                                            @if (aiTotalPaxDIN[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@aiTotalPaxDIN[0]</td>
+
+                                            }
+
+                                            @if (adTotalCpDIN[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalCpDIN[0]))</td>
+                                            }
+
+                                            @if (adTotalCpDIN[1] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalCpDIN[1]))</td>
+                                            }
+
+
+
+                                            @*3 cot tong*@
+                                            @if (aiTotalColPax[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@aiTotalColPax[0]</td>
+
+                                            }
+
+                                            @if (adTotalColCp[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalColCp[0]))</td>
+                                            }
+
+                                            @if (adTotalColCp[1] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", adTotalColCp[1]))</td>
+                                            }
+
+                                        </tr>
+                                        //end dong tong ===================================================================
+                                        foreach (var itemtp in lstTp)
+                                        {
+                                            iSttks = iSttks + 1;
+                                            iTongsk = iTongsk + itemtp.pax;
+                                            dTongvnd = dTongvnd + itemtp.cpvnd;
+                                            dTongusd = dTongusd + itemtp.cpusd;
+
+                                            adTotalColCp[0] = adTotalColCp[0] + dTongvnd;
+                                            adTotalColCp[1] = adTotalColCp[1] + dTongusd;
+                                            aiTotalColPax[0] = aiTotalColPax[0] + iTongsk;
+
+                                            <tr>
+                                                <td class="text-center" style="width:20px;">@iSttks</td>
+                                                <td>@itemtp.tenkhachsan</td>
+
+                                                @*An Sang*@
+
+
+                                                @if (itemtp.srvtype == "BRK")
+                                                {
+                                                    @if (@itemtp.pax == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        aiTotalPax[0] = aiTotalPax[0] + iTongsk;
+
+                                                        <td>@itemtp.pax</td>
+
+                                                    }
+
+                                                    @if (@itemtp.cpvnd == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        adTotalCp[0] = adTotalCp[0] + dTongvnd;
+
+                                                        <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.cpvnd))</td>
+                                                    }
+
+                                                    @if (@itemtp.cpusd == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        adTotalCp[1] = adTotalCp[1] + dTongusd;
+                                                        <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.cpusd))</td>
+                                                    }
+
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+
+                                                }
+
+
+
+                                                @*An Trua*@
+
+                                                else if (itemtp.srvtype == "LUN")
+                                                {
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+
+                                                    @if (@itemtp.pax == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        aiTotalPaxLUN[0] = aiTotalPaxLUN[0] + iTongsk;
+                                                        <td>@itemtp.pax</td>
+
+                                                    }
+
+                                                    @if (@itemtp.cpvnd == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        adTotalCpLUN[0] = adTotalCpLUN[0] + dTongvnd;
+                                                        <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.cpvnd))</td>
+                                                    }
+
+                                                    @if (@itemtp.cpusd == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        adTotalCpLUN[1] = adTotalCpLUN[1] + dTongusd;
+                                                        <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.cpusd))</td>
+                                                    }
+
+
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                }
+
+                                                @*An Toi*@
+
+                                                else if (itemtp.srvtype == "DIN")
+                                                {
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    @if (@itemtp.pax == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        aiTotalPaxDIN[0] = aiTotalPaxDIN[0] + iTongsk;
+                                                        <td>@itemtp.pax</td>
+
+                                                    }
+
+                                                    @if (@itemtp.cpvnd == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        adTotalCpDIN[0] = adTotalCpDIN[0] + dTongvnd;
+                                                        <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.cpvnd))</td>
+                                                    }
+
+                                                    @if (@itemtp.cpusd == 0)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        adTotalCpDIN[1] = adTotalCpDIN[1] + dTongusd;
+                                                        <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.cpusd))</td>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                }
+                                                @*3 cot tong*@
+                                                @if (iTongsk == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@iTongsk</td>
+
+                                                }
+
+                                                @if (dTongvnd == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", dTongvnd))</td>
+                                                }
+
+                                                @if (dTongusd == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", dTongusd))</td>
+                                                }
+
+                                            </tr>
+                                            //reset dong tiep theo
+
+                                            iTongsk = 0;
+                                            dTongusd = 0;
+                                            dTongvnd = 0;
+                                        }
+
+
+
+                                    }
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+

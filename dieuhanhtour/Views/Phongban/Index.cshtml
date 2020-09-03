@@ -1,0 +1,93 @@
+﻿@model IPagedList<Phongban>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+@using X.PagedList;
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section class="content-header">
+    <h1>
+        Danh sách khối / phòng
+        @*<small></small>*@
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="list">danh sách khối / phòng</a></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <form asp-action="index" method="get">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="input-group">
+                                <input type="text" placeholder="Find by name, Id" class="form-control" name="searchString" value="@ViewData["currentFilter"]" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <a asp-action="create" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <table class="table text-nowrap mytable">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="10%"><i class="fa fa-gear"></i></th>
+                                <th class="text-center" width="10%">Mã</th>
+                                <th>
+                                    Tên khối / phòng
+                                </th>
+                                <th class="text-center" width="10%">Code</th>
+                                <th class="text-center" width="10%">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-route-id="@item.maphong"><i class="fa fa-edit"></i></a> |
+                                        <a asp-action="Delete" asp-route-id="@item.maphong" class="text-danger" onclick="return confirm ('Xóa khối / phòng @item.tenphong ?')"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                    <td class="text-center">@item.maphong</td>
+                                    <td>
+                                        @item.tenphong
+                                    </td>
+                                    <td class="text-center">
+                                        @item.macode
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.Raw((bool)item.trangthai ? "<span class=\"label label-success\">Kích hoạt</span>" : "<span class=\"label label-danger\">Khóa</span>")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager((IPagedList)ViewBag.phongban, page => Url.Action("index", new { page, searchString = @ViewData["currentFilter"] }),
+                    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions
+                         {
+                             LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" },
+                             MaximumPageNumbersToDisplay = 5,
+                             UlElementClasses = new[] { "pagination" },
+                    ContainerDivClasses = new[] { "pagination-container" }
+                         }, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

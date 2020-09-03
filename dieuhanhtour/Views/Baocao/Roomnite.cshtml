@@ -1,0 +1,545 @@
+﻿@model IEnumerable<RoomniteViewModel>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Roomnite";
+}
+
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/RoomniteControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Thống kê Roomnite
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form  id="frmRoomnite">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+
+                            @*<div class="col-md-2">
+                                    Chi nhánh
+                                    <select class="form-control " asp-items="@ViewBag.dschinhanh" name="chinhanh"></select>
+                                </div>*@
+                            <br />
+                            <div class="col-md-2">
+                                <span class="btn-group">
+                                    <button type="submit" formaction="/Baocao/Roomnite" formmethod="get" class="btn btn-default" ><i class="fa fa-search"></i></button>                                   
+                                    <button type="submit" formaction="/Baocao/RoomniteToExcel" formmethod="post" class="btn btn-success" title="Export to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="mytable text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>
+                                    Tên khách sạn
+                                </th>
+                                <th>
+                                    SGL
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Phí VNĐ
+                                </th>
+                                <th>
+                                    Phí USD
+                                </th>
+                                <th>
+                                    DBL
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Phí VNĐ
+                                </th>
+                                <th>
+                                    Phí USD
+                                </th>
+                                <th>
+                                    TWN
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Phí VNĐ
+                                </th>
+                                <th>
+                                    Phí USD
+                                </th>
+                                <th>
+                                    TPL
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Phí VNĐ
+                                </th>
+                                <th>
+                                    Phí USD
+                                </th>
+
+                                <th>
+                                    RNT
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Phí VNĐ
+                                </th>
+                                <th>
+                                    Phí USD
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyval">
+                            @{
+                                if (ViewBag.count > 0)
+                                {
+                                    //lay ra cac dong tong
+                                    List<RoomniteViewModel> lstTotal = ViewBag.rowtotal;
+                                    //  var lstTotal = Model;
+                                    int iSttks = 0;
+                                    int iTongphong = 0, iTongsk = 0;
+                                    decimal dTongvnd = 0, dTongusd = 0;
+                                    foreach (var item in lstTotal)
+                                    {
+                                        //row by thanhpho
+                                        List<RoomniteViewModel> lstTp = Model.Where(x => x.thanhpho == item.thanhpho && x.tenkhachsan != null).AsEnumerable().ToList();
+                                        //  int iTotalRow = lstTotal.Count* lstTp.Count;
+                                        decimal[] adTotalSk = new decimal[4];
+
+                                        foreach (var itemtp in lstTp)
+                                        {
+
+                                            iSttks = iSttks + 1;
+                                            iTongphong = iTongphong + itemtp.sgl + itemtp.dbl + itemtp.twn + itemtp.tpl;
+                                            iTongsk = iTongsk + itemtp.sksgl + itemtp.skdbl + itemtp.sktwn + itemtp.sktpl;
+                                            dTongvnd = dTongvnd + itemtp.phivndsgl + itemtp.phivnddbl + itemtp.phivndtwn + itemtp.phivndtpl;
+                                            dTongusd = dTongusd + itemtp.phiusdsgl + itemtp.phiusddbl + itemtp.phiusdtwn + itemtp.phiusdtpl;
+
+                                            adTotalSk[0] = adTotalSk[0] + iTongphong;
+                                            adTotalSk[1] = adTotalSk[1] + iTongsk;
+                                            adTotalSk[2] = adTotalSk[2] + dTongvnd;
+                                            adTotalSk[3] = adTotalSk[3] + dTongusd;
+                                            <tr>
+                                                <td class="text-center" style="width:20px;">@iSttks</td>
+                                                <td>@itemtp.tenkhachsan</td>
+
+                                                @if (@itemtp.sgl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.sgl</td>
+                                                }
+
+                                                @if (@itemtp.sksgl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.sksgl</td>
+                                                }
+
+                                                @if (@itemtp.phivndsgl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.phivndsgl))</td>
+                                                }
+                                                @if (@itemtp.phiusdsgl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.phiusdsgl))</td>
+                                                }
+
+                                                @if (@itemtp.dbl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.dbl</td>
+                                                }
+
+                                                @if (@itemtp.skdbl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.skdbl</td>
+                                                }
+
+                                                @if (@itemtp.phivnddbl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.phivnddbl))</td>
+                                                }
+
+                                                @if (@itemtp.phiusddbl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", itemtp.phiusddbl))</td>
+                                                }
+
+
+                                                @if (@itemtp.twn == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.twn</td>
+                                                }
+
+                                                @if (@itemtp.sktwn == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.sktwn</td>
+                                                }
+
+                                                @if (@itemtp.phivndtwn == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", @itemtp.phivndtwn))</td>
+                                                }
+
+                                                @if (@itemtp.phiusdtwn == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", @itemtp.phiusdtwn))</td>
+                                                }
+
+                                                @if (@itemtp.tpl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.tpl</td>
+                                                }
+
+                                                @if (@itemtp.sktpl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@itemtp.sktpl</td>
+                                                }
+
+                                                @if (@itemtp.phivndtpl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", @itemtp.phivndtpl))</td>
+                                                }
+
+                                                @if (@itemtp.phiusdtpl == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", @itemtp.phiusdtpl))</td>
+                                                }
+
+                                                @if (iTongphong == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@iTongphong</td>
+                                                }
+
+                                                @if (iTongsk == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@iTongsk</td>
+                                                }
+
+                                                @if (dTongvnd == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", @dTongvnd))</td>
+                                                }
+
+                                                @if (dTongusd == 0)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.Raw(String.Format("{0:#,##0}", @dTongusd))</td>
+                                                }
+
+
+                                            </tr>
+
+                                            //reset dong tiep theo
+                                            iTongphong = 0;
+                                            iTongsk = 0;
+                                            dTongusd = 0;
+                                            dTongvnd = 0;
+                                        }
+                                        <tr>
+                                            <td class="text-center" style="width:20px;">&nbsp;</td>
+                                            <td class="text-bold">@item.thanhpho</td>
+                                            @if (@item.sgl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.sgl</td>
+                                            }
+
+                                            @if (@item.sksgl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.sksgl</td>
+                                            }
+
+                                            @if (@item.phivndsgl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", item.phivndsgl))</td>
+                                            }
+                                            @if (@item.phiusdsgl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", item.phiusdsgl))</td>
+                                            }
+
+                                            @if (@item.dbl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.dbl</td>
+                                            }
+
+                                            @if (@item.skdbl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.skdbl</td>
+                                            }
+
+                                            @if (@item.phivnddbl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", item.phivnddbl))</td>
+                                            }
+
+                                            @if (@item.phiusddbl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", item.phiusddbl))</td>
+                                            }
+
+
+                                            @if (@item.twn == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.twn</td>
+                                            }
+
+                                            @if (@item.sktwn == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.sktwn</td>
+                                            }
+
+                                            @if (@item.phivndtwn == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", @item.phivndtwn))</td>
+                                            }
+
+                                            @if (@item.phiusdtwn == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", @item.phiusdtwn))</td>
+                                            }
+
+                                            @if (@item.tpl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.tpl</td>
+                                            }
+
+                                            @if (@item.sktpl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@item.sktpl</td>
+                                            }
+
+                                            @if (@item.phivndtpl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", @item.phivndtpl))</td>
+                                            }
+
+                                            @if (@item.phiusdtpl == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", @item.phiusdtpl))</td>
+                                            }
+
+                                            @if (adTotalSk[0] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@adTotalSk[0]</td>
+                                            }
+
+                                            @if (adTotalSk[1] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@adTotalSk[1]</td>
+                                            }
+
+                                            @if (adTotalSk[2] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", @adTotalSk[2]))</td>
+                                            }
+
+                                            @if (adTotalSk[3] == 0)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", @adTotalSk[3]))</td>
+                                            }
+
+                                        </tr>
+
+                                    }
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+

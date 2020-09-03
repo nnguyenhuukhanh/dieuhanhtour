@@ -1,0 +1,197 @@
+﻿@model IEnumerable<DoanthamquanViewModel>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Báo cáo các điểm tham quan";
+}
+
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/DoanthamquanControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Báo cáo các điểm tham quan
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form id="frmCacdiemtq">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+                            <br />
+                            <div class="col-md-8">
+                                <span class="btn-group">
+                                    <button type="submit" formaction="/Baocao/Doanthamquan" formmethod="get" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="submit" id="btnExport" formaction="/Baocao/DoanthamquanToExcel" formmethod="post" class="btn btn-success" title="Export to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                </span>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-md-12">
+                                Ngày tham quan
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp;Thứ hai &nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" name="aweekday" class="minimal" value="2" @ViewBag.check2 />
+                                </label>
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp; Thứ ba
+                                    <input type="checkbox" name="aweekday" class="minimal" value="3" @ViewBag.check3 />
+                                </label>
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp; Thứ tư
+                                    <input type="checkbox" name="aweekday" class="minimal" value="4" @ViewBag.check4 />
+                                </label>
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp; Thứ năm
+                                    <input type="checkbox" name="aweekday" class="minimal" value="5" @ViewBag.check5 />
+                                </label>
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp; Thứ sáu
+                                    <input type="checkbox" name="aweekday" class="minimal" value="6" @ViewBag.check6 />
+                                </label>
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp; Thứ bảy
+                                    <input type="checkbox" name="aweekday" class="minimal" value="7" @ViewBag.check7 />
+                                </label>
+                                <label>
+
+                                    &nbsp;&nbsp;&nbsp; Chủ nhật
+                                    <input type="checkbox" name="aweekday" class="minimal" value="1" @ViewBag.check1 />
+                                </label>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="mytable text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="text-center">STT</th>
+                                <th class="text-center">
+                                    Code đoàn
+                                </th>
+                                <th class="text-center">
+                                    Khách nước ngoài
+                                </th>
+                                <th class="text-center">
+                                    Khách Việt Nam
+                                </th>
+                                <th class="text-center">
+                                    Tổng số khách
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody id="tbodyval">
+                            @{
+                                if (ViewBag.count > 0)
+                                {
+                                    //lay ra ten diem
+                                    List<string> lstTenDiemtq = Model.Select(x => x.diemtp).Distinct().ToList();
+                                    int[] aiTongkhach = new int[3];
+
+                                    foreach (string ten in lstTenDiemtq)
+                                    {
+                                        int iSttks = 0;
+                                        List<DoanthamquanViewModel> lstDiemtq = Model.Where(x => x.diemtp == ten).AsEnumerable().ToList();
+
+                                        int iTongsk = 0;
+
+
+                                        //dong diem tham quan
+                                        <tr>
+                                            <td class="text-center" style="width:20px;"></td>
+                                            <td class="text-bold">@ten</td>
+                                            <td class="text-bold"></td>
+                                            <td class="text-bold"></td>
+                                            <td class="text-bold"></td>
+                                        </tr>
+
+                                        // dong diemtq ===================================================================
+                                        int[] aiTongkhachtheocode = new int[3];
+
+                                        foreach (DoanthamquanViewModel item in lstDiemtq)
+                                        {
+                                            iSttks = iSttks + 1;
+                                            iTongsk = item.khachnuocngoai + item.khachviet;
+
+                                            aiTongkhachtheocode[0] = aiTongkhachtheocode[0] + item.khachnuocngoai;
+                                            aiTongkhachtheocode[1] = aiTongkhachtheocode[1] + item.khachviet;
+                                            aiTongkhachtheocode[2] = aiTongkhachtheocode[2] + item.khachnuocngoai + +item.khachviet;
+
+                                            aiTongkhach[0] = aiTongkhach[0] + item.khachnuocngoai;
+                                            aiTongkhach[1] = aiTongkhach[1] + item.khachviet;
+                                            aiTongkhach[2] = aiTongkhach[2] + item.khachnuocngoai + +item.khachviet;
+
+
+                                            <tr>
+                                                <td class="text-center" style="width:20px;">@iSttks</td>
+                                                <td>@item.sgtcode</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", item.khachnuocngoai))</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", item.khachviet))</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", iTongsk))</td>
+                                            </tr>
+
+                                            //reset
+                                            iTongsk = 0;
+
+
+                                        }
+                                        //dong tong
+                                        <tr>
+                                            <td class="text-center" style="width:20px;"></td>
+                                            <td class="text-bold">CỘNG</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", aiTongkhachtheocode[0]))</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", aiTongkhachtheocode[1]))</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", aiTongkhachtheocode[2]))</td>
+                                        </tr>
+
+                                        // END dong diemtq ===================================================================
+
+
+                                    }//end ten
+                                     //dong tong cong
+                                    <tr>
+                                        <td class="text-center" style="width:20px;"></td>
+                                        <td class="text-bold">TỔNG CỘNG</td>
+                                        <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", aiTongkhach[0]))</td>
+                                        <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", aiTongkhach[1]))</td>
+                                        <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", aiTongkhach[2]))</td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+

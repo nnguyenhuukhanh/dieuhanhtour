@@ -1,0 +1,119 @@
+﻿@model KhachTour
+
+<script src="~/Asset/js/Tour/DsKhachControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="box">
+            <div class="box-header">
+                <h4 class="modal-title text-uppercase">Thêm khách cho đoàn: @ViewBag.sgtcode </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dongkhach"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <form asp-action="AddKhach" id="frmAddKhach">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="sgtcode" value="@ViewBag.sgtcode" class="form-control" type="hidden" />
+
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin khách</legend>
+                        <div class="form-group col-md-1">
+                            <label class="control-label">STT</label>
+                            <input asp-for="stt" class="form-control text-center" type="text" />
+                            <span asp-validation-for="stt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Mã KH</label>
+                            <input asp-for="makh" class="form-control text-center" type="text" />
+                            <span asp-validation-for="makh" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Họ tên</label>
+                            <input asp-for="hoten" class="form-control" />
+                            <span asp-validation-for="hoten" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Ngày sinh</label>
+                            <input asp-for="ngaysinh" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" type="text" />
+                            <span asp-validation-for="ngaysinh" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label class="control-label">Phái</label>
+                            <select asp-for="phai" asp-items="@ViewBag.phai" class="form-control"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="dienthoai" class="control-label">Điện thoại</label>
+                            <input asp-for="dienthoai" class="form-control" />
+                            <span asp-validation-for="diachi" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="hochieu" class="control-label">Hộ chiếu</label>
+                            <input asp-for="hochieu" class="form-control" />
+                            <span asp-validation-for="hochieu" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label asp-for="cmnd" class="control-label">CMND</label>
+                            <input asp-for="cmnd" class="form-control" />
+                            <span asp-validation-for="cmnd" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="diachi" class="control-label">Địa chỉ</label>
+                            <input asp-for="diachi" class="form-control" />
+                            <span asp-validation-for="diachi" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Quốc tịch</label>
+                            <select asp-for="quoctich" asp-items="@ViewBag.quocgia" class="form-control select2" style="width:100%;"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="loaiphong" class="control-label">Loại phòng</label>
+                            <select asp-for="loaiphong" asp-items="@ViewBag.loaiphong" class="form-control select2" style="width:100%;"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="prn" class="control-label">PRN</label>
+                            <input type="text" asp-for="prn" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label asp-for="ghichu" class="control-label">Ghi chú</label>
+                            <input type="text" asp-for="ghichu" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Vé máy bay</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="vmb" class="minimal" />
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+            </div>
+            <div class="box-footer col-md-12">
+                <input type="button" class="btn btn-primary" id="btAddKhach" value="Đồng ý" />
+                <button type="button" class="btn btn-default dongkhach">Huỷ</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

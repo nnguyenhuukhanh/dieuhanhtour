@@ -1,0 +1,257 @@
+﻿@model IPagedList<Tourinf>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+@using X.PagedList
+
+
+@*<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />*@
+
+@section Scripts{
+    <script src="~/Asset/js/Tour/TourControl.js"></script>
+}
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section class="content-header">
+    <h1>
+        Danh sách tour
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index">Danh sách tour</a></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="form-group">
+                    <form asp-action="index" method="get">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="input-group">
+                                <input type="text" placeholder="Nhập giá trị tìm" class="form-control" name="searchString" value="@ViewData["currentFilter"]" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="button" id="btsearchDate" class="btn btn-default " data-toggle="tooltip" title="Tìm theo ngày đi tour"><i class="fa fa-calendar"></i></button>
+                                    <button type="button" id="btsearchGuest" class="btn btn-default" data-toggle="tooltip" title="Tìm theo tên khách hoặc hộ chiếu"><i class="fa fa-user-secret"></i></button>
+                                    @if (Context.Session.GetString("Newtour") == "True")
+                                    {
+                                        <a asp-action="create" class="btn btn-primary" title="Thêm tour"><i class="fa fa-plus"></i></a>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <form asp-action="index" method="get">
+                        <div class="col-md-6">
+                            <div style="display:none" id="searchDate">
+                                <fieldset class="groupbox-border">
+                                    <legend>Tìm theo ngày bắt đầu đi tour</legend>
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <div class="box-tools">
+                                                    <div class="has-feedback">
+                                                        <input type="text" class="form-control datepicker" title="dd/MM/yyyy" placeholder="Từ ngày" value="@ViewBag.fromDate" name="fromDate" />
+                                                        <span class="fa fa-calendar form-control-feedback text-muted"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="box-tools">
+                                                    <div class="has-feedback">
+                                                        <input type="text" class="form-control datepicker" title="dd/MM/yyyy" name="toDate" value="@ViewBag.toDate" placeholder="Đến ngày" />
+                                                        <span class="fa fa-calendar form-control-feedback text-muted"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="box-tools">
+                                                    <div class="has-feedback">
+                                                        <input type="text" class="form-control" title="Chi nhánh" placeholder="Chi nhánh" name="chinhanh" value="@ViewBag.chinhanh" />
+                                                        <span class="fa fa-home form-control-feedback text-muted"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Nhập giá trị tìm" title="Giá trị tìm" name="searchString" value="@ViewData["currentFilter"]" />
+                                                    <span class="input-group-btn">
+                                                        <button type="submit" class="btn btn-default"><i class="fa  fa-repeat"></i></button>
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="table table-striped text-nowrap mytable" id="tbTourInf">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><i class="fa fa-gear"></i></th>
+                                <th class="text-center">CN</th>
+                                <th class="text-center">KL</th>
+                                <th>Code</th>
+                                <th>SGT code</th>
+                                <th>SK</th>
+                                <th>Em bé</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                                <th>Loại</th>
+                                <th>Lộ trình</th>
+                                <th>Người tạo tour / Sales</th>
+                                <th>Điều hành</th>
+                                <th>Phòng Điều hành</th>
+                                <th>Ngày huỷ</th>
+                                <th>Đóng tour</th>
+                                <th>Loại tiền</th>
+                                <th>Tỷ giá</th>
+                                <th>Doanh thu</th>
+                                <th>Khách</th>
+
+                                <th>Ngày tạo</th>
+                                <th>Lý do huỷ tour</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr class="selected" data-id="@item.sgtcode" data-dongtour="@item.locktour" data-cancel="@item.cancel">
+                                    <td>
+                                        <a href="javascript:;" data-code="@item.sgtcode" title="Xem log file" class="ViewLogTour text-success"><i class="fa fa-file-text"></i></a> |
+                                        <a asp-action="Edit" asp-route-id="@item.sgtcode" data-cancel="@item.cancel" title="Cập nhật tour"><i class="fa fa-edit"></i></a> |
+                                        @if (item.chinhanh != ViewBag.chinhanh || Convert.ToBoolean(Context.Session.GetString("Dongtour")) == false)
+                                        {
+                                            <i class="fa fa-trash-o" title="Không được phép huỷ tour này"></i><span> | </span>
+                                            @if (item.locktour.HasValue)
+                                            {
+                                                <i class="fa fa-unlock" title="Không được phép mở tour này"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-lock" title="Không được phép đóng tour này"></i>
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            @if (item.cancel.HasValue)
+                                            {
+                                                <a href="javascript:;" title="Phục hồi tour" class="Huytour text-danger" data-id="@item.sgtcode" data-cn="@item.chinhanh" data-cancel="@item.cancel" data-session="@ViewBag.chinhanh"><i class="fa fa-trash-o"></i></a> <span> | </span>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:;" title="Huỷ tour" class="Huytour text-danger" data-id="@item.sgtcode" data-cn="@item.chinhanh" data-cancel="@item.cancel" data-session="@ViewBag.chinhanh"><i class="fa fa-trash"></i></a> <span> | </span>
+                                            }
+
+
+                                            @if (item.locktour.HasValue)
+                                            {
+                                                <a href="javascript:;" title="mở tour" class=" dongtour text-warning" data-id="@item.sgtcode" data-locktour="@item.locktour" data-cancel="@item.cancel"><i class="fa fa-unlock"></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:;" title="Lock tour" class="dongtour text-warning" data-id="@item.sgtcode" data-locktour="@item.locktour" data-cancel="@item.cancel"><i class="fa fa-lock"></i></a>
+                                            }
+
+                                        }
+                                    </td>
+                                    <td class="text-center">@item.chinhanh</td>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="minimal" checked="@item.khachle" />
+                                    </td>
+                                    <td class="text-center">
+                                        @item.companyId
+                                    </td>
+                                    @*@if (item.chinhanh != item.chinhanhtao)*@
+                                    @if (item.chinhanh != (item.sgtcode.Substring(0, 3) == "SGT" ? "STS" : item.sgtcode.Substring(0, 3)))
+
+                                    {
+                                        <td style="background-color:#FF7800" class="text-center">@item.sgtcode</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center">@item.sgtcode</td>
+                                    }
+
+                                    <td class="text-center">
+                                        @item.pax
+                                    </td>
+                                    <td class="text-center">
+                                        @item.childern
+                                    </td>
+                                    <td class="text-center">
+                                        @item.arr.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td class="text-center">
+                                        @item.dep.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td class="text-center">
+                                        @item.tourkindId
+                                    </td>
+                                    <td>
+                                        @item.reference
+                                    </td>
+                                    <td>
+                                        @item.concernto
+                                    </td>
+                                    <td>@item.operators</td>
+                                    <td>@item.departoperator</td>
+                                    <td>
+                                        @Html.Raw(item.cancel.HasValue ? item.cancel.Value.ToString("dd/MM/yyyy") : " / /  ")
+                                    </td>
+                                    <td>
+                                        @Html.Raw(item.locktour.HasValue ? item.locktour.Value.ToString("dd/MM/yyyy") : " / /  ")
+                                    </td>
+                                    <td class="text-center">@item.currency</td>
+                                    <td class="text-right">@String.Format("{0:#,##0.0}", item.rate)</td>
+                                    <td class="text-right">@String.Format("{0:#,##0.0}", item.revenue)</td>
+                                    <td>@item.passtypeId</td>
+
+                                    <td>@Html.Raw(item.createtour.HasValue ? item.createtour.Value.ToString("dd/MM/yyyy") : " / /  ")</td>
+                                    <td>@item.cancelnote</td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager((IPagedList)ViewBag.tourinf, page => Url.Action("index", new { page, searchString = @ViewData["currentFilter"], chinhanh = ViewBag.chinhanh, fromDate = ViewBag.fromDate, toDate = ViewBag.toDate }),
+                 PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions
+                      {
+                          LiElementClasses = new string[] { "page-item" },
+                 PageClasses = new string[] { "page-link" },
+                          MaximumPageNumbersToDisplay = 5,
+                          UlElementClasses = new[] { "pagination" },
+                 ContainerDivClasses = new[] { "pagination-container" }
+                      }, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="ModalSearchGuest" class="modal fade in" role="dialog" style="display:none">
+    <div class="DetailGuest"></div>
+</div>
+<div id="ModalDongtour" class="modal fade in" role="dialog" style="display:none">
+    <div class="Cancelnote"></div>
+</div>
+
+

@@ -1,0 +1,312 @@
+﻿@model IEnumerable<Tourprog>
+@*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
+
+@*<script src="~/AdminLTE/plugins/jquery-ui/js/jquery-ui.js"></script>*@
+
+<style>
+    #bodydv {
+        list-style-type: none;
+    }
+
+        #bodydv tr.hovered {
+            background: silver;
+        }
+    .bodydv tr {
+        margin: 5px;
+        padding: 5px;
+        width: 800px;
+        border: 1px solid #ccc;
+        background-color: #ddf;
+    }
+
+    /*quy dinh style khi dragging*/
+    #bodydv tr.ui-draggable-dragging {
+        -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+        -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+        box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+    }
+</style>
+
+<div class="showcttour" style="overflow-x:auto">
+    <table class="table mytable text-nowrap" id="tbTourProg">
+        <thead>
+            <tr>
+                <th class="text-center" width="5%"><i class="fa fa-gear"></i></th>
+                @*<th class="text-center" width="5%">STT</th>*@
+                <th class="text-center" width="5%">Triển khai</th>
+                <th class="text-center" width="5%">Trạng thái</th>
+                <th class="text-center" width="5%">Ngày</th>
+                <th class="text-center" width="5%">Ngày tháng</th>
+                <th class="text-center" width="5%">Giờ</th>
+                <th class="text-center" width="5%">Dịch vụ</th>
+                <th class="text-center" width="5%">Loại tiền</th>
+                <th>Chương trình</th>
+                <th>Ghi chú</th>
+
+            </tr>
+        </thead>
+        <tbody id="bodydv">
+            @foreach (var item in Model)
+            {
+                @*<tr id="row_@item.Id" stt="@item.stt" cotid="@item.sgtcode" class="ui-state-default">*@
+            <tr id="row_@item.Id" stt="@item.stt" cotid="@item.sgtcode" @{ string sEnabled = ""; if (item.chinhanh != ViewBag.cn) { sEnabled = "ui-state-disabled"; }; } class="ui-state-default @sEnabled">
+                <td class="text-center">
+                    <a class="ViewLog text-success" href="javascript:;" data-id="@item.Id" data-srvtyp="@item.srvtype" data-cn="@item.chinhanh" data-session="@ViewBag.cn"><i class="fa fa-file-text"></i></a><span> | </span>
+
+                    @if (item.chinhanh == ViewBag.cn)
+                    {
+                        <a id=@Html.Raw("btnEditpro_" + item.Id) class="EditProg" href="javascript:;" data-id="@item.Id" data-srvtyp="@item.srvtype" data-cn="@item.chinhanh" data-session="@ViewBag.cn"><i class="fa fa-edit"></i></a> <span> | </span>
+                        @*<a id=@Html.Raw("btnDelpro_" + item.Id) class="text-danger DelTourProg" data-id="@item.Id" data-srvtype="@item.srvtype" data-cn="@item.chinhanh" data-session="@ViewBag.cn" data-status="@item.status"><i class="fa fa-trash"></i></a>*@
+                        @if (Context.Session.GetString("Newtour") == "True")
+                        {
+                            <a href="javascript:;" data-id="@item.Id" title="dịch vụ" class="text-danger DelTourProg_"><i class="fa fa-trash"></i></a>
+                        }
+                        else
+                        {
+                            <i class="fa fa-trash"></i>
+                        }
+                    }
+                    else
+                    {
+                        <i class="fa fa-edit"></i> <span> | </span>
+                        <i class="fa fa-trash"></i>
+                    }
+
+                </td>
+                @*<td class="text-center">@item.stt</td>*@
+                <td class="text-center">@item.chinhanh</td>
+                <td class="text-center">@item.status</td>
+                <td class="text-center">@item.date</td>
+
+                @switch (item.logfile)
+                {
+                    case string x when x.StartsWith("S"):
+                        <td style="background-color:#FF7800">@item.logfile</td>
+                        break;
+                    default:
+                        <td>@item.logfile</td>
+                        break;
+                }
+                <td class="text-center">@item.time</td>
+                <td class="text-center">@item.srvtype</td>
+                <td class="text-center">@item.currency</td>
+                <td>
+                    @item.tour_item
+                </td>
+                <td>@item.srvnode</td>
+
+                <td style="display:none;">
+
+                    <script>
+                            $("table").on("click", "#btnEditpro_" +@item.Id, function () {
+
+                    var id = $(this).data('id'); //sgtcode
+                    var cn = $(this).data('cn');
+                    var session = $(this).data('session');
+
+                    if (session != cn) {
+                        alert("Bạn không có quyền cập nhật chương trình này.")
+                    }
+                    else {
+                        var srvtype = $(this).data('srvtyp');
+                        switch (srvtype) {
+                            case 'LUN':
+                            case 'DIN':
+                            case 'BRK':
+                                EditTourProgControl.EditLunchProg(id);
+                                break;
+                            case 'OVR':
+                            case 'WPU':
+                            case 'TRS':
+                                EditTourProgControl.EditOverseaProg(id);
+                                break;
+                            case 'PAC':
+                                EditTourProgControl.EditPacProg(id);
+                                break;
+                            case 'HTL':
+                                EditTourProgControl.EditHotelProg(id);
+                                break;
+                            case 'OTH':
+                                EditTourProgControl.EditOtherProg(id);
+                                break;
+                            case 'TXT':
+                            case 'GUI':
+                                EditTourProgControl.EditTextProg(id);
+                                break;
+                            case 'CAR':
+                            case 'CAG':
+                                EditTourProgControl.EditCarProg(id);
+                                break;
+                            case 'AIR':
+                                EditTourProgControl.EditAirProg(id);
+                                break;
+                            case 'SHP':
+                                EditTourProgControl.EditShopProg(id);
+                                break;
+                            case 'SSE':
+                                EditTourProgControl.EditSightseeing(id);
+                                break;
+                            default:
+                                //EditTourProgControl.loadTourProg();
+                                EditTourProgControl.EditOverseaProg(id);
+                                break;
+                        }
+                                }
+                            });
+
+                            @*$("table").on("click", "#btnDelpro_" +@item.Id, function () {
+
+                                var id = $(this).data('id');
+                                var cn = $(this).data('cn');
+                                var session = $(this).data('session');
+                                var trangthai = $(this).data('status');
+                                if (session != cn) {
+                                    alert("Bạn không có quyền xoá chương trình này.")
+                                }
+                                else {
+                                    switch (trangthai)
+                                    {
+                                        case "WL":
+                                            var srvtype = $(this).data('srvtype');
+                                            if (confirm("Xoá dịch vụ " + srvtype + " này?")) {
+                                                $.ajax({
+                                                    type: "POST",
+                                                    url: "/Tour/DelTourSrvProg",
+                                                    data: { id: id }
+                                                });
+                                                $('#row_' + id).remove();
+                                            }
+                                            break;
+                                        default:
+                                            var url = "/Tour/DelTourProg";
+                                            $.get(url, { id: id }, function (data) {
+                                                $("#ModalDelTourProg").modal('show');
+                                                $(".DelTourProg").html(data);
+                                            });
+                                            break;
+                                    }
+
+                                }
+
+                            });*@
+                    </script>
+
+                </td>
+            </tr>
+            }
+        </tbody>
+        @if (Context.Session.GetString("Newtour") == "True")
+        {            
+            <tfoot>
+                <tr>
+                    <td class="text-center">
+                        <a class="fAdd" href="javascript:;"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tfoot>
+        }
+    </table>
+</div>
+<div id="ModalTourProg" style="display:none">
+    <div class="TourProg"></div>
+</div>
+<div id="ModalDelTourProg" class="modal fade in" role="dialog" style="display:none">
+    <div class="DelTourProg"></div>
+</div>
+@*<div class="modal fade in" role="dialog" id="them-khach">
+        <div class="them-khach1"></div>
+    </div>*@
+@*<div id="ModalViewLog" class="modal fade in" role="dialog" style="display:none">
+        <div class="DetailLog"></div>
+    </div>*@
+
+<script src="~/AdminLTE/plugins/jquery/js/bootbox.min.js"></script>
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+
+<script>
+    
+    function updateVitri(event, ui) {
+
+        var stt = null;
+
+        if (ui.item[0].attributes["stt"] != null) {
+            stt = ui.item[0].attributes["stt"].value;
+        }
+
+        var Code = "0";
+         //Code
+        if (ui.item[0].attributes["cotid"] != null) {
+            Code = ui.item[0].attributes["cotid"].value;
+        }
+
+        //alert(id + '------' + stt);
+
+        var sortedIDs = $("#bodydv").sortable("toArray");
+
+        capnhatstt(sortedIDs, Code);
+    }
+
+    function capnhatstt(sortedIDs, Code) {
+
+
+        var vurl = '@Url.Action("CapNhatSTT", "Tour")';
+
+             return $.ajax({
+                 contentType: 'application/json; charset=utf-8',
+                 dataType: 'json',
+                 type: 'POST',
+                 url: vurl,
+                 data: JSON.stringify(sortedIDs),
+                 success: function (result) {
+                     if (result != "ERR") {
+                         //listdichvu(idtour);//load lai danh sach dich vu
+                         location.reload();
+                     } else {
+                         alert('Có lỗi, thông báo với quản lý!')
+                     }
+                 },
+                 error: function (xhr, ajaxOptions, thrownError) {
+                     if (xhr.status == "200") {
+                         location.reload();
+                        // listdichvu(idtour);//load lai danh sach dich vu
+                     } else {
+                         alert(xhr.status);
+                     }
+                 }
+             });
+
+
+    }
+
+    function handleMauDVDrop(event, ui) {
+       // alert('da tha');
+        $(this).addClass('correct');
+        $(this).addClass("ui-state-highlight");
+    }
+
+    $(function () {
+
+        //$("#bodydv").sortable({
+        //    revert: true,
+        //    update: updateVitri
+        //});
+        $("#bodydv").sortable({
+            items:"tr:not(.ui-state-disabled)"
+            ,revert: true
+            ,cursor:'pointer'
+            ,update: updateVitri
+        });
+
+        $("#bodydv tr").droppable({
+            classes: {
+                "ui-droppable-hover": "ui-state-hover"
+            },
+            //accept: '.theli',
+            hoverClass: 'hovered',
+            drop: handleMauDVDrop
+        });
+
+    });
+
+</script>

@@ -1,0 +1,128 @@
+﻿@model Huongdan
+<script src="~/Asset/js/Tour/HuongdanControl.js"></script>
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h4 class="modal-title text-uppercase">Cập nhật yêu cầu hướng dẫn </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool donghd"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <form id="frmAddHuongDan" asp-action="EditHuongdan">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @*<input type="hidden" asp-for="IdHuongdan" />*@
+                    <input asp-for="Sgtcode" type="hidden" />
+                    <input asp-for="Stt" type="hidden" />
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin được điều chỉnh bởi Điều hành - Hướng dẫn</legend>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Ngoại ngữ</label>
+                            <input asp-for="Ngoaingu" class="form-control text-uppercase" />
+                            <span asp-validation-for="Ngoaingu" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="Batdau" class="control-label">Đi tour từ</label>
+                            <input asp-for="Batdau" type="text" class="form-control datepicker " asp-format="{0:dd/MM/yyyy}" />
+                            <span asp-validation-for="Batdau" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Đi tour tại</label>
+                            <input asp-for="Batdautai" class="form-control "/>
+                            <span asp-validation-for="Batdautai" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Kết thúc tour</label>
+                            <input asp-for="Ketthuc" type="text" class="form-control datepicker" asp-format="{0:dd/MM/yyyy}" />
+                            <span asp-validation-for="Ketthuc" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Kết thúc tại</label>
+                            <input asp-for="Ketthuctai" class="form-control" />
+                            <span asp-validation-for="Ketthuctai" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Suốt tuyến</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="Suottuyen" class="minimal" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Ghi chú</label>
+                            <input asp-for="Ghichu" class="form-control" />
+                            <span asp-validation-for="Ghichu" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Nội dung đi tour</label>
+                            <input asp-for="Ndcongviec" class="form-control" />
+                            <span asp-validation-for="Ndcongviec" class="text-danger"></span>
+                        </div>
+                    </fieldset>
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin về hướng dẫn của phòng Hướng dẫn</legend>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Hướng dẫn</label>
+                            <input asp-for="Tenhd" class="form-control" disabled="disabled" />
+                            <span asp-validation-for="Tenhd" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Điện thoại</label>
+                            <input asp-for="Dienthoai" class="form-control" disabled="disabled" />
+                            <span asp-validation-for="Dienthoai" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Hướng dẫn của</label>
+                            <select asp-for="hopdongcty" asp-items="@ViewBag.supplier" disabled="disabled" class="form-control select2" style="width:100%"></select>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Phí đón tiển</label>
+                            <input asp-for="Phidontien" class="form-control text-right numbers" disabled="disabled" asp-format="{0:#,##0.0}" />
+                            <span asp-validation-for="Phidontien" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Phí đi đoàn</label>
+                            <input asp-for="Phididoan" class="form-control text-right numbers" disabled="disabled" asp-format="{0:#,##0.0}" />
+                            <span asp-validation-for="Phididoan" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Trả phí</label>
+                            <input asp-for="Traphi" class="form-control text-right numbers" disabled="disabled" asp-format="{0:#,##0.0}" />
+                            <span asp-validation-for="Traphi" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Loại tiền</label>
+                            <select asp-for="Loaitien" asp-items="@ViewBag.ngoaite" class="form-control" style="width:100%"></select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Chi nhánh</label>
+                            <select asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                        </div>
+                    </fieldset>
+
+                </form>
+            </div>
+            <div class="box-footer col-md-12">
+                <input type="button" class="btn btn-primary" id="btAddHuongdan" value="Đồng ý" />
+                <button type="button" class="btn btn-default donghd">Huỷ</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

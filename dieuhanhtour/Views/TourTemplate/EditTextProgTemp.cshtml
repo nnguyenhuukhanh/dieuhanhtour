@@ -1,0 +1,46 @@
+﻿@model TourProgTemp
+
+<script src="~/Asset/js/Tourtemplate/EditTourProgTempControl.js"></script>
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h4 class="modal-title text-uppercase">@ViewBag.cartitle </h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form id="frmEditTextProgTemp">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Code" />
+                        <input type="hidden" asp-for="stt" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">@ViewBag.legend</legend>
+                            <div class="form-group col-md-6 ">
+                                <label class="control-label">@ViewBag.tour_item</label>
+                                <input type="text" class="form-control" asp-for="tour_item" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">@ViewBag.ghichu</label>
+                                <input type="text" class="form-control" asp-for="srvnode" />
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="button" class="btn btn-primary" id="btThemTextTourProgTemp" value="OK" />
+                                <button class="btn btn-default dong">Hủy</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

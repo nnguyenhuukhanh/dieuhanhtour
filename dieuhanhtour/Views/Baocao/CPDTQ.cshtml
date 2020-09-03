@@ -1,0 +1,155 @@
+﻿@model IEnumerable<CPDiemThamQuanViewModel>
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Báo cáo các điểm tham quan";
+}
+
+@section Scripts{
+
+    <script src="~/Asset/js/Baocao/CPDiemTQControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Báo cáo chi phí các điểm tham quan
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form id="frmCPDiemTq">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtTungay" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" id="txtDenngay" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+                            <br />
+                            <div class="col-md-8">
+                                <span class="btn-group">
+                                    <button type="submit" formaction="/Baocao/CPDTQ" formmethod="get" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="submit" id="btnExport" formaction="/Baocao/CPDTQToExcel" formmethod="post" class="btn btn-success" title="Export to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                </span>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="mytable text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="text-center">STT</th>
+                                <th class="text-center">
+                                    Điểm tham quan
+                                </th>
+                                <th class="text-center">
+                                    Khách NN
+                                </th>
+                                <th class="text-center">
+                                    Khách VN
+                                </th>
+                                <th class="text-center">
+                                    Tổng SK
+                                </th>
+                                <th class="text-center">
+                                    Chi phí VNĐ
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody id="tbodyval">
+                            @{
+                                if (ViewBag.count > 0)
+                                {
+                                    //lay ra ten tp
+                                    List<string> lstTenThanhpho = Model.Select(x => x.tentp).Distinct().ToList();
+
+                                    int iTongKhachNN = 0, iTongKhachVN = 0, iTongsk = 0;
+                                    decimal dChiphi = 0;
+
+                                    foreach (string ten in lstTenThanhpho)
+                                    {
+                                        int iSttks = 0;
+                                        int[] aiTongkhach = new int[3];
+                                        decimal[] adTongCP = new decimal[3];
+
+                                        List<CPDiemThamQuanViewModel> lstDiemtq = Model.Where(x => x.tentp == ten).AsEnumerable().ToList();
+
+
+                                        //tinh tong theo thanh pho truoc
+                                        foreach (CPDiemThamQuanViewModel item in lstDiemtq)
+                                        {
+                                            iTongKhachNN = iTongKhachNN + item.khachnuocngoai;//tong khach nn
+                                            iTongKhachVN = iTongKhachVN + item.khachviet;//tong khach vn
+                                            iTongsk = iTongsk + item.khachnuocngoai + item.khachviet;
+                                            dChiphi = dChiphi + item.cpvnd;
+                                        }
+
+
+                                        //dong tong theo thanh pho
+                                        <tr>
+                                            <td class="text-center" style="width:20px;"></td>
+                                            <td class="text-bold">@ten</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", iTongKhachNN))</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", iTongKhachVN))</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", iTongsk))</td>
+                                            <td class="text-bold">@Html.Raw(String.Format("{0:#,##0}", dChiphi))</td>
+                                        </tr>
+                                        //reset
+                                        iTongKhachNN = 0;
+                                        iTongKhachVN = 0;
+                                        iTongsk = 0;
+                                        dChiphi = 0;
+
+                                        // dong diemtq ===================================================================
+
+                                        foreach (CPDiemThamQuanViewModel item in lstDiemtq)
+                                        {
+                                            iSttks = iSttks + 1;
+                                            iTongsk = item.khachnuocngoai + item.khachviet;
+
+
+                                            <tr>
+                                                <td class="text-center" style="width:20px;">@iSttks</td>
+                                                <td>@item.diemtq</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", item.khachnuocngoai))</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", item.khachviet))</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", iTongsk))</td>
+                                                <td>@Html.Raw(String.Format("{0:#,##0}", item.cpvnd))</td>
+                                            </tr>
+
+                                            //reset
+                                            iTongsk = 0;
+                                        }
+
+
+                                        // END dong diemtq ===================================================================
+                                      
+
+                                    }//end ten
+
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+

@@ -1,0 +1,149 @@
+﻿@model IPagedList<Dmdiemtq>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+@using X.PagedList
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.mytable').DataTable({
+                'paging': false,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': true,
+                'info': false,
+                'autoWidth': false
+            });
+            $('.ddlnoborder').attr('disabled', true);
+        })
+    </script>
+
+}
+<style>
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        /*appearance: none;*/
+    }
+</style>
+@{
+    ViewData["Title"] = "Index";
+}
+<section class="content-header">
+    <h1>
+        Danh sách điểm tham quan
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index">Danh sách điểm tham quan</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <form asp-action="index" method="get">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="input-group">
+                                <input type="text" placeholder="Find by name, Id" class="form-control" name="searchString" value="@ViewData["currentFilter"]" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <a asp-action="create" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="table mytable">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><i class="fa fa-gear"></i></th>
+                                <th>
+                                    Code
+                                </th>
+                                <th>
+                                    Điểm tham quan
+                                </th>
+                                <th>
+                                    Tỉnh 
+                                </th>
+                                <th>
+                                    Giá vé người lớn
+                                </th>
+                                <th>
+                                    Giá vé trẻ em
+                                </th>
+                                @*<th>
+                                    Công nợ
+                                </th>*@
+                                <th>
+                                    VAT vào
+                                </th>
+                                <th>
+                                    VAT ra
+                                </th>
+                                <th>
+                                    Tỉ lệ lãi
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-route-id="@item.Code"><i class="fa fa-edit"></i></a> |
+                                        @*<a asp-action="Details" asp-route-id="@item.Code">Details</a> |*@
+                                        <a asp-action="Delete" asp-route-id="@item.Code" class="text-danger" onclick="return confirm ('Xóa điểm tham quan @item.Diemtq ?')"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Code
+                                    </td>
+                                    <td>
+                                        @item.Diemtq
+                                    </td>
+                                    <td>
+                                        @*@item.Tinhtp*@
+                                        <select asp-for="@item.Tinhtp" class="form-control ddlnoborder" style="width:100%; border:none; background:inherit" asp-items="@ViewBag.tinh"></select>                                                                                 
+                                    </td>
+                                    <td class="text-right">
+                                        @item.Giave.ToString("N0")
+                                    </td>
+                                    <td class="text-right">
+                                        @item.Giatreem.ToString("N0")
+                                    </td>
+                                    @*<td>
+                                        @item.Congno
+                                    </td>*@
+                                    <td class="text-center">
+                                        @item.Vatvao
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Vatra
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Tilelai
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager((IPagedList)ViewBag.diemtq, page => Url.Action("index", new { page,  searchString = @ViewData["currentFilter"] }),
+                  PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" },
+                  PageClasses = new string[] { "page-link" }, MaximumPageNumbersToDisplay = 5, UlElementClasses = new[] { "pagination" },
+                  ContainerDivClasses = new[] { "pagination-container" } }, new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "nameListContainer" }))
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

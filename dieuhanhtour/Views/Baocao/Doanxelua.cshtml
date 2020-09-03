@@ -1,0 +1,128 @@
+﻿@model IEnumerable<DoancanoViewModel>
+
+<link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+@{
+    ViewData["Title"] = "Doanxelua";
+}
+@section Scripts{
+    <script src="~/Asset/js/Baocao/DoantheoxeluaControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Thống kê đoàn theo hãng xe lửa
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form id="frmDoantheoxelua">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+                            <div class="col-md-2">
+                                Thị trường
+                                <select class="form-control " asp-items="@ViewBag.dsphongban" value="@ViewBag.thitruong" name="thitruong"></select>
+                            </div>
+                            <br />
+                            <div class="col-md-6">
+                                <span class="btn-group">
+                                    <button type="submit" formaction="/Baocao/Doanxelua" formmethod="get" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="submit" formaction="/Baocao/DoanxeluaToExcel" formmethod="post" class="btn btn-success" title="Export danh sách to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                </span>
+                                <label>
+                                    <input type="radio" name="sortby" class="minimal" value="A" @ViewBag.checka />
+                                    &nbsp;&nbsp;&nbsp;Sort theo đoàn &nbsp;&nbsp;&nbsp;
+                                </label>
+                                <label>
+                                    <input type="radio" name="sortby" class="minimal" value="B" @ViewBag.checkb />
+                                    &nbsp;&nbsp;&nbsp; Sort theo hãng
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="table mytable text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>
+                                    Hãng xe lửa
+                                </th>
+                                <th>
+                                    SGT Code
+                                </th>
+                                <th>
+                                    Ngày
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Nội dung
+                                </th>
+                                <th>
+                                    Ghi chú
+                                </th>
+                                <th>
+                                    Thị trường
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center" style="width:20px;">@item.stt</td>
+                                        <td style="width:100px;">
+                                            @item.tenhang
+                                        </td>
+                                        <td>
+                                            @item.sgtcode
+                                        </td>
+                                        <td class="text-center">
+                                            @item.ngay.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td class="text-center">
+                                            @item.sk
+                                        </td>
+                                        <td>
+                                            @item.noidung
+                                        </td>
+                                        <td>
+                                            @Html.Raw(item.ghichu)
+                                        </td>
+                                        <td>
+                                            @item.thitruong
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+

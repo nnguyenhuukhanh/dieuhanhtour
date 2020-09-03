@@ -1,0 +1,167 @@
+﻿@model Chiphikhac
+
+<script src="~/Asset/js/Tour/CPControl.js"></script>
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+        var locktour = $("#txtLocktour").val();
+        if (locktour.length > 0) {
+            $('#btAddEditCP').addClass('disabled');
+        }
+    });
+</script>
+<style>
+    .error {
+        border: 1px solid #A94442;
+    }
+
+    label.error {
+        background: url("/image/unchecked.gif") no-repeat;
+        padding-left: 16px;
+        margin-left: .3em;
+    }
+
+    label.valid {
+        background: url("/image/checked.gif") no-repeat;
+        display: block;
+        width: 16px;
+        height: 16px
+    }
+</style>
+<form id="frmEditCP">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="box">
+                <div class="box-header">
+                    <h4 class="modal-title text-uppercase">@ViewBag.sgtcode </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dongchiphi"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+
+                <div class="box-body">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input id="utxtId" asp-for="sgtcode" class="form-control" type="hidden" />
+                    <input asp-for="idorthercost" type="hidden" />
+                    <input type="hidden" asp-for="del" />
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin chi phí khác</legend>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Từ ngày</label>
+                            @*<input asp-for="fromdate" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" type="text" />*@
+                            <input asp-for="fromdate" class="form-control text-center numbers" type="text" />
+                            <span asp-validation-for="fromdate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Đến ngày</label>
+                            @*<input asp-for="todate" class="form-control datepicker text-center" asp-format="{0:dd/MM/yyyy}" type="text" />*@
+                            <input asp-for="todate" class="form-control text-center numbers" type="text" />
+                            <span asp-validation-for="todate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Code dịch vụ</label>
+                            <select asp-for="srvtype" asp-items="@ViewBag.dichvu" class="form-control" style="width:100%"></select>
+
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Loại tiền</label>
+                            <select asp-for="currency" asp-items="@ViewBag.ngoaite" class="form-control" style="width:100%"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="quantity" class="control-label">Số lượng</label>
+                            <input asp-for="quantity" class="form-control text-right" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="unitprice" class="control-label">Đơn giá</label>
+                            <input asp-for="unitprice" class="form-control numbers text-right" asp-format="{0:#,##0.0}" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Km</label>
+                            <input asp-for="km" class="form-control" />
+                            <span asp-validation-for="km" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Ngày HD</label>
+                            <input asp-for="guidedays" class="form-control" />
+                            <span asp-validation-for="guidedays" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Tổng chi phí</label>
+                            <input asp-for="amount" class="form-control numbers text-right" asp-format="{0:#,##0.0}" />
+                            <span asp-validation-for="amount" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Lợi nhuận</label>
+                            <input asp-for="srvprofit" class="form-control numbers text-right" asp-format="{0:#,##0.0}" />
+                            <span asp-validation-for="srvprofit" class="text-danger"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-md-10">
+                            <label class="control-label">Ghi chú</label>
+                            <input type="text" class="form-control" asp-for="srvnode" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Chi nhánh</label>
+                            <select asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                        </div>
+                    </fieldset>
+                    <fieldset class="groupbox-border">
+                        <legend class="groupbox-border">Thông tin công nợ</legend>
+                        <div class="form-horizontal">
+                            <div class="col-md-2">
+                                <div class="checkbox">
+                                    <label>
+                                        <input asp-for="credit" class="minimal" /><span class="text-bold"> &nbsp; Phải thu</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="checkbox">
+                                    <label>
+                                        <input asp-for="debit" class="minimal" /><span class="text-bold"> &nbsp; Phải trả</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <label class="col-md-1 control-label">Nơi book</label>
+                            <div class="col-md-3">
+                                <select asp-for="srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                            </div>
+                            <label class="col-md-1 control-label">VAT vào</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control text-center text-center numbers" asp-for="vatin" />
+                            </div>
+                            <label class="col-md-1 control-label">VAT ra</label>
+                            <div class="col-md-1">
+                                <input type="text" class="form-control text-center text-center numbers" asp-for="vatout" />
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </fieldset>
+
+                </div>
+                <div class="box-footer col-md-12">
+                    <input type="button" class="btn btn-primary" id="btAddEditCP" value="Đồng ý" />
+                    <button type="button" class="btn btn-default dongchiphi">Huỷ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

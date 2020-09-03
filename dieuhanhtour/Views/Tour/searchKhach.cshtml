@@ -1,0 +1,103 @@
+﻿@model List<KhachTour>
+    <link href="~/AdminLTE/plugins/jquery-ui/css/jquery-ui/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Asset/js/Tour/TourControl.js"></script>
+
+<script>
+    $(function () {
+            $('#tbSearchKhach').DataTable({
+                'paging': true,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false
+            })
+        })
+</script>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-gray">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Tìm thông tin khách</h4>
+        </div>
+        <div class="modal-body" style="max-height: 400px !important; overflow-y: auto">
+            <div class="box no-border">
+                <div class="box-header">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="input-group">
+                            <input type="text" placeholder="Tìm theo tên, hộ chiếu, cmnd hoặc sgtcode" class="form-control" name="search" value="@ViewBag.search" id="txtSearchGuest" />
+                            <span class="input-group-btn">
+                                <button type="button" id="btSearchGuest_" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12" style="overflow-x:auto">
+                        <table class="table mytable text-nowrap" id="tbSearchKhach">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" width="5%"><i class="fa fa-gear"></i></th>
+                                    <th>SGT Code</th>
+                                    <th>Họ tên</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Nam</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Điện thoại</th>
+                                    <th>Cmnd</th>
+                                    <th>Hộ chiếu</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @if (ViewBag.k > 0)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr >
+
+                                            <td class="text-center">
+                                                @if ((bool)item.del)
+                                                {
+                                                    <a class="text-danger" href="javascript:;" title="Khách đã bị xoá thông tin" ><i class="fa fa-remove"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="text-primary" href="@Url.Action("Edit", "Tour", new { id = item.sgtcode })" title="Xem thông tin khách"><i class="fa fa-check-square-o"></i></a>
+                                                }
+                                            </td>
+                                            <td>@item.sgtcode</td>
+                                            <td>
+                                                @item.hoten
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.ngaysinh.HasValue ? item.ngaysinh.Value.ToString("dd/MM/yyyy") : "")
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.phai ? "Nam" : "Nữ")
+                                            </td>
+                                            <td>@item.diachi</td>
+                                            <td>@item.dienthoai</td>
+                                            <td>
+                                                @item.cmnd
+                                            </td>
+                                            <td>
+                                                @item.hochieu
+                                            </td>
+                                        </tr>
+                                        }
+                                        }
+
+                                    </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-primary" data-dismiss="modal">Đóng</button>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<dieuhanhtour.ViewModel.vTinh>
+
+@{
+    ViewData["Title"] = "Danh sách Tinh";
+}
+@section Scripts{
+    <script src="~/Asset/js/Thanhpho/ThanhphoControl.js"></script>
+}
+<section class="content-header">
+    <h1>
+        Danh sách Tỉnh
+        @*<small></small>*@
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="list">danh sách tỉnh</a></li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <form asp-action="index" method="get">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-3">
+                            <input type="text" placeholder="Tìm thông tin" class="form-control" id="txtSearchTinh" />                           
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box-body" style="max-height:200px; overflow:auto;">
+                <div class="col-md-12">
+                    <table class="table table-striped mytable" id="tbTinh">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">Mã Tỉnh</th>
+                                <th>Tên Tỉnh</th>
+                                <th>Vùng Miền</th>
+                                <th>Bộ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbBodyTinh">
+                            @foreach (var item in Model)
+                            {
+                                <tr data-matinh="@item.Matinh">
+                                    <td class="text-center">
+                                        @item.Matinh
+                                    </td>
+                                    <td>@item.Tentinh</td>
+                                    <td>
+                                        @item.TenVung
+                                    </td>
+                                    <td class="text-center">
+                                        @item.TenMien
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12">
+                    <div id="ThanhphoByTinh"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<input type="hidden" id="txtMatinh" />
+<div id="ModalEditThanhpho" style="display:none">
+   
+    <div class="EditThanhpho">
+
+    </div>
+</div>

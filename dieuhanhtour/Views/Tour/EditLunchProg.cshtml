@@ -1,0 +1,185 @@
+﻿@model Tourprog
+
+<link href="~/AdminLTE/plugins/icheck/css/all.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/icheck/js/icheck.js"></script>
+
+<script src="~/Asset/js/Tour/EditTourProgControl.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+    });
+    $('#ddlChinhanh_').off('change').on('change', function () {
+
+        var chinhanh = $(this).val();
+        var url = "/Tour/getUserByChinhanh";
+
+        var ddlNguoidh_ = $('#ddlNguoidh_');
+        ddlNguoidh_.empty();
+
+        if (chinhanh != null && chinhanh != '') {
+            $.getJSON(url, { chinhanh: chinhanh }, function (nguoidhs) {
+                var result = JSON.parse(nguoidhs);
+                if (result != null && !jQuery.isEmptyObject(result)) {
+
+                    //ddlNguoidh_.append($('<option/>', {
+                    //    value: null,
+                    //    text: ""
+                    //}));
+                    $.each(result, function (index, nguoidh) {
+
+                        ddlNguoidh_.append($('<option/>', {
+                            value: nguoidh.Username,
+                            text: nguoidh.Hoten
+                        })).trigger('change');
+                    });
+                }
+                else {
+                    ddlNguoidh_.empty();
+                };
+            });
+        }
+
+    });
+</script>
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<form id="frmEditLunchProgTemp">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="modal-title text-uppercase">Chi tiết về nhà hàng </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool dong"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <input type="hidden" asp-for="Id" />
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">@ViewBag.tieude</legend>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>Diễn giải</label>
+                                    <input type="text" class="form-control" asp-for="tour_item" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Nhà hàng</label>
+                                    <select asp-for="supplierid" asp-items="@ViewBag.supplier" class="form-control select2" style="width:100%"></select>
+                                </div>
+
+
+                                <div class="col-md-2">
+                                    <label>Số người lớn</label>
+                                    <input type="text" class="form-control text-center numbers" asp-for="pax" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Giá</label>
+                                    <input type="text" class="form-control text-right numbers" asp-for="unitpricea" asp-format="{0:#,##0.00}" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Số trẻ em</label>
+                                    <input type="text" class="form-control text-center numbers" asp-for="childern" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Giá</label>
+                                    <input type="text" class="form-control text-right numbers" asp-for="unitpricec" asp-format="{0:#,##0.00}" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Giá theo nhóm</label>
+                                    <input type="text" class="form-control text-right numbers" asp-for="amount" asp-format="{0:#,##0.00}" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Loại tiền</label>
+                                    <select asp-for="currency" asp-items="@ViewBag.ngoaite" class="form-control" style="width:100%"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Trạng thái</label>
+                                    <select asp-for="status" asp-items="@ViewBag.status" class="form-control" style="width:100%"></select>
+                                </div>
+                                @if (Convert.ToBoolean(Context.Session.GetString("Admin")) == true)
+                                {
+                                    <div class="col-md-2">
+                                        <label class="control-label">CN triển khai </label>
+                                        <select id="ddlChinhanh_" asp-for="chinhanh" asp-items="@ViewBag.chinhanh" class="form-control" style="width:100%"></select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="control-label">Điều hành </label>
+                                        <select id="ddlNguoidh_" asp-for="dieuhanh" asp-items="@ViewBag.dieuhanh" class="form-control select2" style="width:100%"></select>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-2">
+                                        <label class="control-label">CN triển khai </label>
+                                        <input asp-for="chinhanh" class="form-control" readonly />
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="control-label">Điều hành </label>
+                                        <input asp-for="dieuhanh" class="form-control" readonly />
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Thông tin về công nợ</legend>
+                            <div class="form-group">
+                                <div class="col-md-1">
+                                    <label>Công nợ</label>
+                                    <div class="checkbox text-center">
+                                        <input asp-for="debit" type="checkbox" class="minimal" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <label class="control-label">Nơi book</label>
+                                    <select asp-for="srvcode" asp-items="@ViewBag.srvcode" class="form-control select2" style="width:100%"></select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">VAT vào</label>
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatin" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">VAT ra</label>
+                                    <input type="text" class="form-control text-center numbers" asp-for="vatout" />
+                                </div>
+
+
+
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="groupbox-border">
+                            <legend class="groupbox-border">Ghi chú món ăn (seafood, Âu, Á, Việt...)</legend>
+                            <div class="col-md-12">
+                                <label>Ghi chú / Thực đơn</label>
+                                <textarea type="text" class="form-control" asp-for="srvnode" rows="5"></textarea>
+                            </div>
+
+
+                        </fieldset>
+                    </div>
+                    <div class="box-footer col-md-12">
+                        @if (Model.dieuhanh == Context.Session.GetString("username") || Context.Session.GetString("roleId") == "superadmin" || (Context.Session.GetString("chinhanh") == Model.chinhanh && Context.Session.GetString("Admin").ToString().ToLower() == "true"))
+                        {
+
+                            <input type="button" class="btn btn-primary" id="btCapnhatLunchProgTemp" value="Cập nhật" />
+                        }
+                        <button type="button" class="btn btn-default dong">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

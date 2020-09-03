@@ -1,0 +1,116 @@
+﻿@model Supplier
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Thêm nhà cung cấp dịch vụ
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlSupplier")">Danh sách nhà cung cấp dịch vụ</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Chinhanh" id="txtMacn" />
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Code</label>
+                            <input asp-for="Code" class="form-control text-center" readonly />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Code CN</label>
+                            <input asp-for="Codecn" class="form-control text-center" />
+                            <span asp-validation-for="Codecn" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Tên giao dịch</label>
+                            <input asp-for="Tengiaodich" class="form-control" />
+                            <span asp-validation-for="Tengiaodich" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Tên thương mại</label>
+                            <input asp-for="Tenthuongmai" class="form-control" />
+                            <span asp-validation-for="Tenthuongmai" class="text-danger"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Thành phố</label>
+                            <select asp-items="@ViewBag.thanhpho" asp-for="Thanhpho" class="form-control select2" style="width:100%"></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Quố gia</label>
+                            <select asp-items="@ViewBag.quocgia" asp-for="Quocgia" class="form-control select2" style="width:100%"></select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Địa chỉ</label>
+                            <input asp-for="Diachi" class="form-control" />
+                            <span asp-validation-for="Diachi" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Điện thoại</label>
+                            <input asp-for="Dienthoai" class="form-control" />
+                            <span asp-validation-for="Dienthoai" class="text-danger"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Fax</label>
+                            <input asp-for="Fax" class="form-control" />
+                            <span asp-validation-for="Fax" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Mã số thuế</label>
+                            <input asp-for="Masothue" class="form-control" />
+                            <span asp-validation-for="Masothue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Ngành nghề</label>
+                            <input asp-for="Nganhnghe" class="form-control" />
+                            <span asp-validation-for="Nganhnghe" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Người liên hệ</label>
+                            <input asp-for="Nguoilienhe" class="form-control" />
+                            <span asp-validation-for="Nguoilienhe" class="text-danger"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-md-5">
+                            <label class="control-label">Website</label>
+                            <input asp-for="Website" class="form-control" />
+                            <span asp-validation-for="Website" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label class="control-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Trạng thái</label>
+                            <select asp-items="@ViewBag.trangthai" asp-for="Trangthai" class="form-control"></select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Thêm" class="btn btn-primary" />
+                            <a href="@Context.Session.GetString("urlSupplier")" class="btn btn-default">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function () {
+            $('.select2').select2();
+        });
+    </script>
+}

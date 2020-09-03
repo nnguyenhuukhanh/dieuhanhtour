@@ -1,0 +1,127 @@
+﻿@model IEnumerable<HuongdanDoanViewModel>
+
+@{
+    ViewData["Title"] = "DanhsachHuongdanDidoan";
+}
+@section Scripts{
+    <script src="~/Asset/js/Baocao/HuongdanDoanControl.js"></script>
+}
+
+<section class="content-header">
+    <h1>
+        Thống kê hướng dẫn theo đoàn
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a asp-action="index" asp-controller="Tour">Danh sách tour</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-12">
+                    <form id="frmHuongdanDoanDiDoan">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                Từ ngày
+                                <input type="text" class="form-control text-center datepicker" value="@ViewBag.tungay" title="dd/MM/yyyy" name="tungay" />
+                            </div>
+                            <div class="col-md-2">
+                                Đến ngày
+                                <input type="text" class="form-control text-center datepicker" value="@ViewBag.denngay" title="dd/MM/yyyy" name="denngay" />
+                            </div>
+                            <br />
+                            <div class="col-md-6">
+                                <span class="btn-group">
+                                    <button type="submit" formaction="/Baocao/DanhsachHuongdanDidoan" formmethod="get" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <button type="submit" formaction="/Baocao/DanhsachHuongdanDidoanToExcel" formmethod="post" class="btn btn-success" title="Export danh sách to Excel"><i class="fa fa-file-excel-o"></i></button>
+                                </span>
+                                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-md-12" style="overflow-x:auto">
+                    <table class="table mytable text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>
+                                    SGT Code
+                                </th>
+                                <th>
+                                    Reference
+                                </th>
+                                <th>
+                                    SK
+                                </th>
+                                <th>
+                                    Tên hướng dẫn
+                                </th>
+                                <th>
+                                    Điện thoại
+                                </th>
+                                <th>
+                                    Ngoại ngữ
+                                </th>
+                                <th>
+                                    Ngày đi
+                                </th>
+                                <th>
+                                    Ngày kết thúc
+                                </th>
+
+                                <th>
+                                    Công việc
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.count > 0)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center" style="width:20px;">@item.stt</td>
+                                        <td style="width:100px;">
+                                            @item.sgtcode
+                                        </td>
+                                        <td>
+                                            @item.lotrinh
+                                        </td>
+
+                                        <td class="text-center">
+                                            @item.sk
+                                        </td>
+                                        <td>
+                                            @item.tenhd
+                                        </td>
+                                        <td>
+                                            @item.dienthoai
+                                        </td>
+                                        <td>
+                                            @item.ngoaingu
+                                        </td>
+                                        <td>
+                                            @item.batdau.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.ketthuc.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.ndcongviec
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

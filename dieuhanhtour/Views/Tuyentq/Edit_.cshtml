@@ -1,0 +1,46 @@
+﻿@model Tuyentq
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<section class="content-header">
+    <h1>
+        Cập nhật tuyến tham quan
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active"><a href="@Context.Session.GetString("urlTuyentq")">Danh sách tuyến tham quan</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-body">
+                <div class="col-md-12">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group col-md-2">
+                            <label class="control-label">Code</label>
+                            <input asp-for="Code" class="form-control text-center" readonly/>
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-10">
+                            <label class="control-label">Tuyến tham quan</label>
+                            <input asp-for="Tentuyen" class="form-control" />
+                            <span asp-validation-for="Tentuyen" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                            <a href="@Context.Session.GetString("urlTuyentq")" class="btn btn-default">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
